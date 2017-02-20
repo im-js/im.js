@@ -16,10 +16,11 @@ import {
     Text
 } from 'react-native';
 
+import { TabBar } from '../UiLibrary';
+
 class ImClient extends Component {
     render() {
         return (
-            <Text></Text>
         );
     }
 }
