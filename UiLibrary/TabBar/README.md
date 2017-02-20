@@ -15,9 +15,6 @@
         tintIcon="https://f.souche.com/ic_main_home_sel.png"
         badge={32}
         onPress={() => {
-            this.setNavigation({
-                title: '首页'
-            });
             Alert.alert('首页 Tab 被点击', '可在此处与 navigator 通讯');
         }}
     >
@@ -32,7 +29,7 @@
 **TabBar**
 
 Field       | Description
-:-----------|:---------------------------------
+:-----------|:--------------------------------
 activeIndex | 初始化视图在第几个 Tab，从 0 开始
 
 **TabBar.Item**

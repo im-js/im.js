@@ -9,4 +9,4 @@
  * 组件库入口文件
  */
 
-export { TabBar } from './TabBar/index.js';
+export { default as TabBar } from './TabBar';
