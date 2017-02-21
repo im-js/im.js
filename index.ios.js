@@ -10,11 +10,16 @@
  */
 
 import {
-    AppRegistry,
+ AppRegistry,
 } from 'react-native';
 
-// import ImClient from './src/index.js';
-// AppRegistry.registerComponent('ImClient', () => ImClient);
-
+import ImClient from './src/index.js';
 import Demo from './UiLibrary/Demo.js';
-AppRegistry.registerComponent('ImClient', () => Demo);
+
+const APP_INFO = require('./app.json');
+
+if (APP_INFO.appMode === 'ImClient') {
+    AppRegistry.registerComponent('ImClient', () => ImClient);
+} else if (APP_INFO.appMode === 'Demo') {
+    AppRegistry.registerComponent('ImClient', () => Demo);
+}

@@ -5,7 +5,7 @@
  * reserved.
  *
  * @flow
- * 
+ *
  * Android 入口文件
  */
 
@@ -14,5 +14,12 @@ import {
 } from 'react-native';
 
 import ImClient from './src/index.js';
+import Demo from './UiLibrary/Demo.js';
 
-AppRegistry.registerComponent('ImClient', () => ImClient);
+const APP_INFO = require('./app.json');
+
+if (APP_INFO.appMode === 'ImClient') {
+    AppRegistry.registerComponent('ImClient', () => ImClient);
+} else if (APP_INFO.appMode === 'Demo') {
+    AppRegistry.registerComponent('ImClient', () => Demo);
+}

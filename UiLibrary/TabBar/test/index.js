@@ -168,7 +168,6 @@
          alignItems: 'stretch'
      },
      tabDemoContainerInput: {
-         marginTop: 20,
          alignItems: 'stretch'
      },
      text: {
@@ -176,6 +175,7 @@
          textAlign: 'center'
      },
      textInput: {
+         marginTop: 30,
          fontSize: 16,
          height: 40,
          padding: 5,

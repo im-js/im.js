@@ -1,4 +1,5 @@
 {
   "name": "ImClient",
-  "displayName": "ImClient"
+  "displayName": "ImClient",
+  "appMode": "Demo"
 }
