@@ -5,7 +5,7 @@
  * reserved.
  *
  * @flow
- * 
+ *
  * iOS 入口文件
  */
 
@@ -13,6 +13,8 @@ import {
     AppRegistry,
 } from 'react-native';
 
-import ImClient from './src/index.js';
+// import ImClient from './src/index.js';
+// AppRegistry.registerComponent('ImClient', () => ImClient);
 
-AppRegistry.registerComponent('ImClient', () => ImClient);
+import Demo from './UiLibrary/Demo.js';
+AppRegistry.registerComponent('ImClient', () => Demo);
