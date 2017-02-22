@@ -28,7 +28,6 @@ export default class Tab extends Component {
             tintColor,
             icon,
             tintIcon,
-            onPress,
             selected,
             badge
         } = this.props;
@@ -61,7 +60,7 @@ export default class Tab extends Component {
                     </Text>
 
                     <Badge
-                        unReadMessageCount={this.props.badge}
+                        unReadMessageCount={badge}
                         style={styles.badge}
                     />
                 </View>

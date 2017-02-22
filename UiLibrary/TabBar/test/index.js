@@ -4,7 +4,9 @@
  * Copyright (c) 2017 plusmancn, all rights
  * reserved.
  *
- * Description
+ * @flow
+ *
+ * TabBar 示例页面
  */
  import React from 'react';
  import {
@@ -21,6 +23,11 @@
  } from '../../index.js';
 
  class TabDemo extends React.Component {
+     constructor(props) {
+         super(props);
+         console.log('TabDemo ' + this.props.content + ' was created');
+     }
+
      componentWillMount() {
          console.log(this.props.name, 'will Mount');
      }

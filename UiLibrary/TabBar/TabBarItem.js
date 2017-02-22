@@ -12,11 +12,6 @@ import React, {
     PropTypes
 } from 'react';
 
-import {
-    Text,
-    View
-} from 'react-native';
-
 export default class TabBarItem extends Component {
     static propTypes = {
         title: PropTypes.string.isRequired,
@@ -34,9 +29,6 @@ export default class TabBarItem extends Component {
     }
 
     render() {
-        let child = React.Children.only(this.props.children);
-        return React.cloneElement(child, {
-            style: [child.props.style, this.props.style],
-        });
+        return React.Children.only(this.props.children);
     }
 }
