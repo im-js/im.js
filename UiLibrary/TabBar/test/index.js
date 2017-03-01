@@ -13,8 +13,7 @@
      StyleSheet,
      TextInput,
      Text,
-     View,
-     Alert
+     View
  } from 'react-native';
 
  import {
@@ -92,11 +91,7 @@
  }
 
  class TabBarExample extends React.Component {
-     static navigation = {
-         title: {
-             text: '首页'
-         }
-     };
+     static NavigationTitle = '首页';
 
      constructor (props) {
          super(props);
@@ -119,7 +114,7 @@
                      icon="https://f.souche.com/ic_main_home.png"
                      tintIcon="https://f.souche.com/ic_main_home_sel.png"
                      onPress={() => {
-                         Alert.alert('首页 Tab 被点击', '可在此处与 navigator 通讯');
+                         this.props.navigator.setNavigationTitle('首页');
                      }}
                  >
                      <TabDemo
@@ -136,9 +131,12 @@
                      tintIcon="https://f.souche.com/ic_main_msg_sel.png"
                      badge={this.state.unReadMessageCount}
                      onPress={() => {
+                         let unReadMessageCount = this.state.unReadMessageCount + 1;
                          this.setState({
-                             unReadMessageCount: this.state.unReadMessageCount + 1
+                             unReadMessageCount: unReadMessageCount
                          });
+
+                         this.props.navigator.setNavigationTitle(`消息未读(${unReadMessageCount})`);
                      }}
                  >
                      <TabDemo
@@ -154,6 +152,7 @@
                      icon="https://f.souche.com/ic_main_mine.png"
                      tintIcon="https://f.souche.com/ic_main_mine_sel.png"
                      onPress={() => {
+                         this.props.navigator.setNavigationTitle('我的');
                      }}
                  >
                      <TabDemoTextInput
@@ -168,7 +167,7 @@
  const styles = StyleSheet.create({
      container: {
          flex: 1,
-         backgroundColor: Color.G3,
+         backgroundColor: Color.BackgroundGrey
      },
      tabDemoContainer: {
          justifyContent: 'center',

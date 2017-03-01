@@ -143,7 +143,7 @@
     "no-sequences": 1,               // disallow use of comma operator
     "no-unused-expressions": 0,      // disallow usage of expressions in statement position
     "no-void": 1,                    // disallow use of void operator (off by default)
-    "no-warning-comments": 0,        // disallow usage of configurable warning terms in comments": 1,                        // e.g. TODO or FIXME (off by default)
+    "no-warning-comments": 0,        // disallow usage of configurable warning terms in comments": 1,                        // e.g. (off by default)
     "no-with": 1,                    // disallow use of the with statement
     "radix": 1,                      // require use of the second argument for parseInt() (off by default)
     "semi-spacing": 1,	             // require a space after a semi-colon

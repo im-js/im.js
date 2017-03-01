@@ -17,41 +17,67 @@ import {
     Text
 } from 'react-native';
 
-// 加载组件
-import TabBar from './TabBar/test/index.js'
+import TabBarDemo from './TabBar/test/index.js';
+import {
+    Navigator,
+    FontSize,
+    Color
+} from './index.js';
 
-class Demo extends Component {
+class DemoListView extends Component {
+    static NavigationTitle = '组件列表';
+
     constructor() {
         super();
 
         this.ds = new ListView.DataSource({
             rowHasChanged: function(r1, r2) {
                 return r1.name !== r2.name;
+            },
+            // REVIEW: s1, s2 的返回值不确定，需要再次确认
+            sectionHeaderHasChanged: function (s1, s2) {
+                console.log('👀', s1, s2);
+                return s1 !== s2;
             }
         });
 
-        this.components = [
-            {
+        this.components = {
+            '导航': [{
                 name: 'TabBar',
-                compoent: TabBar
-            }
-        ];
+                compoent: TabBarDemo
+            }]
+        };
     }
 
-    _renderRow(row) {
+    _renderRow = (row) => {
         return (
             <TouchableHighlight
                 onPress={() => {
+                    this.props.navigator.push(TabBarDemo);
                 }}
             >
                 <View
                     style={styles.listItem}
                 >
                     <Text
-
+                        style={styles.listItemText}
                     >{row.name}</Text>
                 </View>
             </TouchableHighlight>
+        );
+    }
+
+    _renderSectionHeader = (sectionData, sectionID, rowId) => {
+        return (
+            <View
+                style={styles.sectionHeader}
+            >
+                <Text
+                    style={styles.sectionHeaderText}
+                >
+                    {sectionID}
+                </Text>
+            </View>
         );
     }
 
@@ -59,8 +85,20 @@ class Demo extends Component {
         return (
             <ListView
                 style={styles.container}
-                dataSource={this.ds.cloneWithRows(this.components)}
+                dataSource={this.ds.cloneWithRowsAndSections(this.components)}
+                renderSectionHeader={this._renderSectionHeader}
                 renderRow={this._renderRow}
+            />
+        );
+    }
+}
+
+
+class  Demo extends Component {
+    render() {
+        return (
+            <Navigator
+                initialComponent={DemoListView}
             />
         );
     }
@@ -68,11 +106,28 @@ class Demo extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 22,
         flex: 1
     },
     listItem: {
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        height: 40,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    listItemText: {
+        color: Color.Black,
+        marginHorizontal: 15,
+        fontSize: FontSize.Primary
+    },
+    sectionHeader: {
+        height: 30,
+        justifyContent: 'center',
+        paddingHorizontal: 15,
+        backgroundColor: Color.BackgroundGrey
+    },
+    sectionHeaderText: {
+        color: Color.LightBlack,
+        fontSize: FontSize.Annotation
     }
 });
 

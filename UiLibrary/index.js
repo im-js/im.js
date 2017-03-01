@@ -10,4 +10,6 @@
  */
 
 export { default as TabBar } from './TabBar';
-export { default as Color } from './Color.js';
+export { default as Navigator } from './Navigator';
+export { default as Color } from './Color';
+export { default as FontSize } from './FontSize';
