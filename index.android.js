@@ -20,6 +20,6 @@ const APP_INFO = require('./app.json');
 
 if (APP_INFO.appMode === 'ImClient') {
     AppRegistry.registerComponent('ImClient', () => ImClient);
-} else if (APP_INFO.appMode === 'Demo') {
+} else if (APP_INFO.appMode === 'UiLibrary') {
     AppRegistry.registerComponent('ImClient', () => Demo);
 }
