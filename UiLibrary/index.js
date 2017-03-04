@@ -11,5 +11,6 @@
 
 export { default as TabBar } from './TabBar';
 export { default as Navigator } from './Navigator';
+export { default as Button } from './Button';
 export { default as Color } from './Color';
 export { default as FontSize } from './FontSize';

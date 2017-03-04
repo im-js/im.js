@@ -25,6 +25,10 @@ const {
 import StaticContainer from './StaticContainer.js';
 
 class Navigator extends Component {
+    state: Object;
+    _compoentStack: Array<Object>;
+    _renderLeftComponentStack: Array<Function>;
+
     static propTypes = {
         initialComponent: PropTypes.func.isRequired,
         hackBackAndroid: PropTypes.bool,
@@ -35,7 +39,7 @@ class Navigator extends Component {
         hackBackAndroid: true
     };
 
-    constructor(props) {
+    constructor(props: Object) {
         super(props);
         // 导航栈
         this.state = {
@@ -51,19 +55,30 @@ class Navigator extends Component {
         };
 
         // 组件栈
-        this.compoentStack = [
+        this._compoentStack = [
             props.initialComponent
+        ];
+
+        // Header-RenderLeftComponentStack
+        this._renderLeftComponentStack = [
+            () => {null;}
         ];
     }
 
     // 外部开放方法，设置当前 title
-    setNavigationTitle = (title) => {
+    setNavigationTitle = (title: String) => {
         let stack = this.state.stack;
 
         stack.routes[stack.index].title = title;
         this.setState({
             stack: stack
         });
+    }
+
+    // 设置右方组件
+    setRenderLeftCompoent = (renderLeftComponent: Function) => {
+        let stack = this.state.stack;
+        this._renderLeftComponentStack[stack.index] = renderLeftComponent;
     }
 
     // 进行组件之间通讯
@@ -81,8 +96,9 @@ class Navigator extends Component {
         }
     }
 
-    push = (compoent) => {
-        this.compoentStack.push(compoent);
+    push = (compoent: Object, renderLeftComponent: Function = () => {null;}) => {
+        this._compoentStack.push(compoent);
+        this._renderLeftComponentStack.push(renderLeftComponent);
         let newStack = NavigationStateUtils.push(this.state.stack, {
             key: String(this.state.stack.index + 1),
             title: compoent.NavigationTitle || ''
@@ -94,7 +110,8 @@ class Navigator extends Component {
     }
 
     pop = () => {
-        this.compoentStack.pop();
+        this._compoentStack.pop();
+        this._renderLeftComponentStack.pop();
         let newStack = NavigationStateUtils.pop(this.state.stack);
 
         this.setState({
@@ -102,6 +119,7 @@ class Navigator extends Component {
         });
     }
 
+    // 内部方法
     _handleBack = () => {
         if (this.state.stack.index > 0) {
             this._onNavigateBack();
@@ -111,16 +129,27 @@ class Navigator extends Component {
         return false;
     }
 
+    _renderLeftComponent = (sceneProps) => {
+        let { scene } = sceneProps;
+
+        // 已经出栈则不进行渲染
+        if (scene.index >= this._renderLeftComponentStack.length ) {
+            return null;
+        }
+
+        return (this._renderLeftComponentStack[scene.index])(sceneProps);
+    }
+
     // 头部渲染
     _renderScene = (sceneProps) => {
         let { scene } = sceneProps;
 
         // 已经出栈则不进行渲染
-        if (scene.index >= this.compoentStack.length ) {
+        if (scene.index >= this._compoentStack.length ) {
             return null;
         }
 
-        let RenderCompoent = this.compoentStack[scene.index];
+        let RenderCompoent = this._compoentStack[scene.index];
         return (
             <StaticContainer
                 isActive={scene.isActive}
@@ -136,12 +165,13 @@ class Navigator extends Component {
         this.pop();
     }
 
-    _renderHeader = (scenesProps) => {
+    _renderHeader = (sceneProps) => {
         let { style } = this.props;
         return (
             <NavigationHeader
-                {...scenesProps}
+                {...sceneProps}
                 onNavigateBack={this._onNavigateBack}
+                renderRightComponent={this._renderLeftComponent}
                 style={[styles.navigationHeader, style]}
             />
         );

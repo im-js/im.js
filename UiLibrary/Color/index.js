@@ -16,5 +16,6 @@ export default {
     LightGrey: '#cccccc',
     LittleGrey: '#d9d9d9',
     BackgroundGrey: '#f2f2f2',
-    White: '#ffffff'
+    White: '#ffffff',
+    iPhoneBlue: '#0A60FE'
 };

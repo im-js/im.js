@@ -18,6 +18,8 @@ import {
 } from 'react-native';
 
 import TabBarDemo from './TabBar/test/index.js';
+import NavigatorDemo from './Navigator/test/index.js';
+
 import {
     Navigator,
     FontSize,
@@ -26,6 +28,9 @@ import {
 
 class DemoListView extends Component {
     static NavigationTitle = '组件列表';
+
+    ds: Object;
+    components: Object;
 
     constructor() {
         super();
@@ -42,10 +47,16 @@ class DemoListView extends Component {
         });
 
         this.components = {
-            '导航': [{
-                name: 'TabBar',
-                compoent: TabBarDemo
-            }]
+            '导航': [
+                {
+                    name: 'TabBar',
+                    component: TabBarDemo
+                },
+                {
+                    name: 'Navigator',
+                    component: NavigatorDemo
+                }
+            ]
         };
     }
 
@@ -53,7 +64,7 @@ class DemoListView extends Component {
         return (
             <TouchableHighlight
                 onPress={() => {
-                    this.props.navigator.push(TabBarDemo);
+                    this.props.navigator.push(row.component);
                 }}
             >
                 <View
@@ -81,12 +92,24 @@ class DemoListView extends Component {
         );
     }
 
+    _renderSeparator(sectionID: number, rowID: number, adjacentRowHighlighted: bool) {
+          return (
+            <View
+                key={`${sectionID}-${rowID}`}
+                style={{
+                    height: 1
+                }}
+            />
+          );
+    }
+
     render() {
         return (
             <ListView
                 style={styles.container}
                 dataSource={this.ds.cloneWithRowsAndSections(this.components)}
                 renderSectionHeader={this._renderSectionHeader}
+                renderSeparator={this._renderSeparator}
                 renderRow={this._renderRow}
             />
         );
@@ -106,7 +129,7 @@ class  Demo extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
     },
     listItem: {
         backgroundColor: '#fff',

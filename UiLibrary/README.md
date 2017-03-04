@@ -4,6 +4,7 @@
 ## 组件列表
 * TabBar - 底部 Tab 导航组件
 * Navigator - 顶部导航视图
+* Button - 按钮组
 
 ## 主题设置
 * Color - 颜色定义文件
