@@ -19,6 +19,7 @@ import {
 
 import TabBarDemo from './TabBar/test/index.js';
 import NavigatorDemo from './Navigator/test/index.js';
+import ButtonDemo from './Button/test/index.js';
 
 import {
     Navigator,
@@ -55,6 +56,12 @@ class DemoListView extends Component {
                 {
                     name: 'Navigator',
                     component: NavigatorDemo
+                }
+            ],
+            '控件': [
+                {
+                    name: 'Button',
+                    component: ButtonDemo
                 }
             ]
         };
