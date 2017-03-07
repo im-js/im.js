@@ -125,6 +125,16 @@ class NavigatorDemo extends React.Component {
                     </Button>
                 </View>
 
+                <View
+                    style={styles.demoItem}
+                >
+                    <Button
+                        onPress={()=>{ this.props.navigator.pop(); }}
+                    >
+                        弹出当前视图
+                    </Button>
+                </View>
+
                 <View>
                     <TextInput
                         style={styles.textInput}

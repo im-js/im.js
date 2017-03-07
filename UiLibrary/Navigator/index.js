@@ -51,7 +51,7 @@ class Navigator extends Component {
                     {
                         key: '0',
                         title: props.initialComponent.NavigationTitle || '',
-                        isShowHeader: true
+                        isShowHeader: props.isShowHeader
                     }
                 ]
             }
@@ -94,27 +94,12 @@ class Navigator extends Component {
         });
     }
 
-    // 进行组件之间通讯
-    componentWillMount() {
-        // android 回退事件处理
-        if (this.props.hackBackAndroid) {
-            BackAndroid.addEventListener('hardwareBackPress', this._handleBack);
-        }
-    }
-
-    componentWillUnmount() {
-        // 取消事件监听
-        if (this.props.hackBackAndroid) {
-            BackAndroid.removeEventListener('hardwareBackPress', this._handleBack);
-        }
-    }
-
-    push = (compoent: Object, renderRightComponent: Function = () => {null;}, isShowHeader: boolean = true) => {
-        this._compoentStack.push(compoent);
+    push = (component: Object, renderRightComponent: Function = () => {null;}, isShowHeader: boolean = true) => {
+        this._compoentStack.push(component);
         this._renderRightComponentStack.push(renderRightComponent);
         let newStack = NavigationStateUtils.push(this.state.stack, {
             key: String(this.state.stack.index + 1),
-            title: compoent.NavigationTitle || '',
+            title: component.NavigationTitle || '',
             isShowHeader: isShowHeader
         });
 
@@ -131,6 +116,21 @@ class Navigator extends Component {
         this.setState({
             stack: newStack
         });
+    }
+
+    // 进行组件之间通讯
+    componentWillMount() {
+        // android 回退事件处理
+        if (this.props.hackBackAndroid) {
+            BackAndroid.addEventListener('hardwareBackPress', this._handleBack);
+        }
+    }
+
+    componentWillUnmount() {
+        // 取消事件监听
+        if (this.props.hackBackAndroid) {
+            BackAndroid.removeEventListener('hardwareBackPress', this._handleBack);
+        }
     }
 
     // 内部方法
