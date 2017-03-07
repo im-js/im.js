@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         paddingVertical: 5,
         color: Color.iPhoneBlue,
-        fontSize: FontSize.Annotation,
+        fontSize: FontSize.Annotation
     },
     buttonBoxBorder: {
         overflow: 'hidden',

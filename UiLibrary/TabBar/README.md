@@ -28,18 +28,18 @@
 ## Options
 **TabBar**
 
-Field       | Description
-:-----------|:--------------------------------
-activeIndex | 初始化视图在第几个 Tab，从 0 开始
+Field       | Type   | Description
+:-----------|:-------|:---------------------------------
+activeIndex | Number | 初始化视图在第几个 Tab，从 0 开始
 
 **TabBar.Item**
 
-Field     | Description
-:---------|:----------------------------------------
-title     | 底部标题
-color     | 未选中状态下的标题颜色
-tintColor | 选中状态下的标题颜色
-icon      | 为选中状态下的 icon 图片
-tintIcon  | 选中状态下的 icon 图片
-badge     | 角标计数，数字类型，超过 99 会显示 `99+`
-onPress   | 点击事件回调函数
+Field     | Type       | Description
+:---------|:-----------|:----------------------------------------
+title     | String     | 底部标题
+color     | String     | 未选中状态下的标题颜色
+tintColor | String     | 选中状态下的标题颜色
+icon      | String URL | 为选中状态下的 icon 图片
+tintIcon  | String URL | 选中状态下的 icon 图片
+badge     | Number     | 角标计数，数字类型，超过 99 会显示 `99+`
+onPress   | Function   | 点击事件回调函数
