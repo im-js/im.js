@@ -42,7 +42,6 @@ class DemoListView extends Component {
             },
             // REVIEW: s1, s2 的返回值不确定，需要再次确认
             sectionHeaderHasChanged: function (s1, s2) {
-                console.log('👀', s1, s2);
                 return s1 !== s2;
             }
         });

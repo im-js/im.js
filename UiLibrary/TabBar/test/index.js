@@ -102,18 +102,6 @@ class TabBarExample extends React.Component {
         this.state = {
             unReadMessageCount: 95
         };
-
-        // this.props.navigator.setRenderLeftCompoent((sceneProps) => {
-        //     return (
-        //         <View
-        //             style={styles.leftComponent}
-        //         >
-        //             <Button.Text
-        //                 onPress={this._handleSaveEvent}
-        //             >保存</Button.Text>
-        //         </View>
-        //     );
-        // });
     }
 
     render() {
@@ -203,11 +191,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFF',
         marginHorizontal: 10,
         marginBottom: 20
-    },
-    // leftComponent: {
-    //     flex: 1,
-    //     justifyContent: 'center'
-    // }
+    }
 });
 
 export default TabBarExample;

@@ -27,16 +27,18 @@ import StaticContainer from './StaticContainer.js';
 class Navigator extends Component {
     state: Object;
     _compoentStack: Array<Object>;
-    _renderLeftComponentStack: Array<Function>;
+    _renderRightComponentStack: Array<Function>;
 
     static propTypes = {
         initialComponent: PropTypes.func.isRequired,
         hackBackAndroid: PropTypes.bool,
-        style: PropTypes.object
+        isShowHeader: PropTypes.bool,
+        style: PropTypes.object,
     };
 
     static defaultProps = {
-        hackBackAndroid: true
+        hackBackAndroid: true,
+        isShowHeader: true
     };
 
     constructor(props: Object) {
@@ -48,7 +50,8 @@ class Navigator extends Component {
                 routes: [
                     {
                         key: '0',
-                        title: props.initialComponent.NavigationTitle || ''
+                        title: props.initialComponent.NavigationTitle || '',
+                        isShowHeader: true
                     }
                 ]
             }
@@ -59,8 +62,8 @@ class Navigator extends Component {
             props.initialComponent
         ];
 
-        // Header-RenderLeftComponentStack
-        this._renderLeftComponentStack = [
+        // Header-RenderRightComponentStack
+        this._renderRightComponentStack = [
             () => {null;}
         ];
     }
@@ -76,9 +79,19 @@ class Navigator extends Component {
     }
 
     // 设置右方组件
-    setRenderLeftCompoent = (renderLeftComponent: Function) => {
+    setRenderRightCompoent = (renderRightComponent: Function) => {
         let stack = this.state.stack;
-        this._renderLeftComponentStack[stack.index] = renderLeftComponent;
+        this._renderRightComponentStack[stack.index] = renderRightComponent;
+    }
+
+    // 设置导航条显示和隐藏
+    toogleNavigationHeader = () => {
+        let stack = this.state.stack;
+
+        stack.routes[stack.index].isShowHeader = !stack.routes[stack.index].isShowHeader;
+        this.setState({
+            stack: stack
+        });
     }
 
     // 进行组件之间通讯
@@ -96,12 +109,13 @@ class Navigator extends Component {
         }
     }
 
-    push = (compoent: Object, renderLeftComponent: Function = () => {null;}) => {
+    push = (compoent: Object, renderRightComponent: Function = () => {null;}, isShowHeader: boolean = true) => {
         this._compoentStack.push(compoent);
-        this._renderLeftComponentStack.push(renderLeftComponent);
+        this._renderRightComponentStack.push(renderRightComponent);
         let newStack = NavigationStateUtils.push(this.state.stack, {
             key: String(this.state.stack.index + 1),
-            title: compoent.NavigationTitle || ''
+            title: compoent.NavigationTitle || '',
+            isShowHeader: isShowHeader
         });
 
         this.setState({
@@ -111,7 +125,7 @@ class Navigator extends Component {
 
     pop = () => {
         this._compoentStack.pop();
-        this._renderLeftComponentStack.pop();
+        this._renderRightComponentStack.pop();
         let newStack = NavigationStateUtils.pop(this.state.stack);
 
         this.setState({
@@ -129,15 +143,15 @@ class Navigator extends Component {
         return false;
     }
 
-    _renderLeftComponent = (sceneProps) => {
+    _renderRightComponent = (sceneProps) => {
         let { scene } = sceneProps;
 
         // 已经出栈则不进行渲染
-        if (scene.index >= this._renderLeftComponentStack.length ) {
+        if (scene.index >= this._renderRightComponentStack.length ) {
             return null;
         }
 
-        return (this._renderLeftComponentStack[scene.index])(sceneProps);
+        return (this._renderRightComponentStack[scene.index])(sceneProps);
     }
 
     // 头部渲染
@@ -167,11 +181,15 @@ class Navigator extends Component {
 
     _renderHeader = (sceneProps) => {
         let { style } = this.props;
+        if (!sceneProps.scene.route.isShowHeader) {
+            return null;
+        }
+
         return (
             <NavigationHeader
                 {...sceneProps}
                 onNavigateBack={this._onNavigateBack}
-                renderRightComponent={this._renderLeftComponent}
+                renderRightComponent={this._renderRightComponent}
                 style={[styles.navigationHeader, style]}
             />
         );
