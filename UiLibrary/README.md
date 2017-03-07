@@ -12,3 +12,6 @@
 ## 主题设置
 * [Color](./Color) - 颜色定义文件
 * [FontSize](./FontSize) -  字体定义文件
+
+## 开发笔记
+详细记录了开发过程中的思考 [点击进入博客](https://github.com/plusmancn/plusmancn.github.com)
