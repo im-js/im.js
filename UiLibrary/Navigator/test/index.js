@@ -82,11 +82,38 @@ class NavigatorDemo extends React.Component {
         });
     }
 
+    _switchRightCompoent = () => {
+        this.props.navigator.setRenderRightCompoent((sceneProps) => {
+            return (
+                <View
+                    style={styles.leftComponent}
+                >
+                    <Button
+                        isWithOutLine={false}
+                        onPress={() => {
+                            Alert.alert('新按钮被点击');
+                        }}
+                    >
+                        新按钮
+                    </Button>
+                </View>
+            );
+        });
+    }
+
     _handleSave = () => {
         Alert.alert('组件通讯', `输入框的值为：${this.state.textInputValue}`);
     }
 
     _handleTextChange = (text) => {
+        this.setState({
+            textInputValue: text
+        });
+
+        if (!this._leftComponent) {
+            return;
+        }
+
         if (text) {
             this._leftComponent.setState({
                 isSaveDisabled: false
@@ -96,10 +123,6 @@ class NavigatorDemo extends React.Component {
                 isSaveDisabled: true
             });
         }
-
-        this.setState({
-            textInputValue: text
-        });
     }
 
     _toogleNavigatorStatus = () => {
@@ -149,6 +172,17 @@ class NavigatorDemo extends React.Component {
                         只有在输入框有值的情况下，保存按钮为可用状态。
                     </Text>
                 </View>
+
+                <View
+                    style={styles.demoItem}
+                >
+                    <Button
+                        onPress={this._switchRightCompoent}
+                    >
+                        切换 RightComponent
+                    </Button>
+                </View>
+
             </View>
         );
     }

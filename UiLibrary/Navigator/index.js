@@ -27,7 +27,6 @@ import StaticContainer from './StaticContainer.js';
 class Navigator extends Component {
     state: Object;
     _compoentStack: Array<Object>;
-    _renderRightComponentStack: Array<Function>;
 
     static propTypes = {
         initialComponent: PropTypes.func.isRequired,
@@ -51,7 +50,8 @@ class Navigator extends Component {
                     {
                         key: '0',
                         title: props.initialComponent.NavigationTitle || '',
-                        isShowHeader: props.isShowHeader
+                        isShowHeader: props.isShowHeader,
+                        renderRightComponent: () => {null;}
                     }
                 ]
             }
@@ -60,11 +60,6 @@ class Navigator extends Component {
         // 组件栈
         this._compoentStack = [
             props.initialComponent
-        ];
-
-        // Header-RenderRightComponentStack
-        this._renderRightComponentStack = [
-            () => {null;}
         ];
     }
 
@@ -81,7 +76,12 @@ class Navigator extends Component {
     // 设置右方组件
     setRenderRightCompoent = (renderRightComponent: Function) => {
         let stack = this.state.stack;
-        this._renderRightComponentStack[stack.index] = renderRightComponent;
+
+        stack.routes[stack.index].renderRightComponent =renderRightComponent;
+
+        this.setState({
+            stack: stack
+        });
     }
 
     // 设置导航条显示和隐藏
@@ -96,11 +96,11 @@ class Navigator extends Component {
 
     push = (component: Object, renderRightComponent: Function = () => {null;}, isShowHeader: boolean = true) => {
         this._compoentStack.push(component);
-        this._renderRightComponentStack.push(renderRightComponent);
         let newStack = NavigationStateUtils.push(this.state.stack, {
             key: String(this.state.stack.index + 1),
             title: component.NavigationTitle || '',
-            isShowHeader: isShowHeader
+            isShowHeader: isShowHeader,
+            renderRightComponent: renderRightComponent
         });
 
         this.setState({
@@ -110,7 +110,6 @@ class Navigator extends Component {
 
     pop = () => {
         this._compoentStack.pop();
-        this._renderRightComponentStack.pop();
         let newStack = NavigationStateUtils.pop(this.state.stack);
 
         this.setState({
@@ -145,13 +144,14 @@ class Navigator extends Component {
 
     _renderRightComponent = (sceneProps) => {
         let { scene } = sceneProps;
+        let routes  = this.state.stack.routes;
 
         // 已经出栈则不进行渲染
-        if (scene.index >= this._renderRightComponentStack.length ) {
+        if (scene.index >= routes.length ) {
             return null;
         }
 
-        return (this._renderRightComponentStack[scene.index])(sceneProps);
+        return (routes[scene.index].renderRightComponent)(sceneProps);
     }
 
     // 头部渲染
