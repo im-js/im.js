@@ -162,7 +162,7 @@ class NavigatorDemo extends React.Component {
                     <TextInput
                         style={styles.textInput}
                         placeholder="输入框和保存按钮之间的交互"
-                        underlineColorAndroid="#FFF"
+                        underlineColorAndroid="transparent"
                         value={this.state.textInputValue}
                         onChangeText={this._handleTextChange}
                     />

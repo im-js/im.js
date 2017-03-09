@@ -27,9 +27,9 @@ class Button extends React.Component {
         // 是否带外框
         isWithOutLine: PropTypes.bool,
         // 边框样式，可以覆盖 isWithOutLine 的设置
-        borderStyle: PropTypes.object,
+        style: PropTypes.any,
         // children 为文字时的文本样式
-        textStyle: PropTypes.object,
+        textStyle: PropTypes.any,
         // 禁用状态
         disabled: PropTypes.bool
     }
@@ -41,6 +41,7 @@ class Button extends React.Component {
 
     constructor(props: Object) {
         super(props);
+        console.log(props.style);
     }
 
     _renderChildren() {
@@ -60,7 +61,7 @@ class Button extends React.Component {
     }
 
     render() {
-        let { isWithOutLine, borderStyle, disabled} = this.props;
+        let { isWithOutLine, style, disabled} = this.props;
         return (
             <TouchableOpacity
                 onPress={this.props.onPress}
@@ -70,7 +71,7 @@ class Button extends React.Component {
                     style={[
                         isWithOutLine ? styles.buttonBoxBorder : {},
                         disabled ? styles.disabledStyle : {},
-                        borderStyle
+                        style
                     ]}
                 >
                     {this._renderChildren()}
@@ -84,6 +85,7 @@ const styles = StyleSheet.create({
     buttonText: {
         paddingHorizontal: 15,
         paddingVertical: 5,
+        textAlign: 'center',
         color: Color.iPhoneBlue,
         fontSize: FontSize.Annotation
     },

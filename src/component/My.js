@@ -20,13 +20,16 @@
      Text
  } from 'react-native';
 
-import profileStore from '../store/profileStore.js';
+import {
+    profileStore
+} from '../storeSingleton.js';
+
 import Profile from './Profile.js';
 
  @observer
  class Setting extends Component {
-     constructor() {
-         super();
+     constructor(props) {
+         super(props);
      }
 
      render() {
@@ -78,7 +81,6 @@ import Profile from './Profile.js';
                                  }}
                              />
                          </View>
-
                      </View>
                  </TouchableHighlight>
              </ScrollView>

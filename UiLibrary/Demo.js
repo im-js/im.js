@@ -20,6 +20,7 @@ import {
 import TabBarDemo from './TabBar/test/index.js';
 import NavigatorDemo from './Navigator/test/index.js';
 import ButtonDemo from './Button/test/index.js';
+import TextInputDemo from './TextInput/test/index.js';
 
 import {
     Navigator,
@@ -61,6 +62,10 @@ class DemoListView extends Component {
                 {
                     name: 'Button',
                     component: ButtonDemo
+                },
+                {
+                    name: 'TextInput',
+                    component: TextInputDemo
                 }
             ]
         };

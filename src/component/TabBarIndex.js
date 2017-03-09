@@ -27,7 +27,9 @@ class TabBarIndex extends React.Component {
         let { navigator } = this.props;
 
         return (
-            <TabBar>
+            <TabBar
+                activeIndex={2}
+            >
                 <TabBar.Item
                     title="首页"
                     color="#BBBAC1"

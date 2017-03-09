@@ -20,7 +20,10 @@ import {
     Text
 } from 'react-native';
 
-import profileStore from '../store/profileStore.js';
+import {
+    profileStore
+} from '../storeSingleton.js';
+
 import ProfileItemEdit from './ProfileItemEdit.js';
 
 @observer

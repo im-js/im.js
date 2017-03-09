@@ -56,4 +56,4 @@ class ProfileStore {
         return result;
     }
 }
-export default new ProfileStore();
+export default ProfileStore;

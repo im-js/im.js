@@ -15,15 +15,26 @@ import {
     Navigator
 } from '../UiLibrary';
 
+import {
+    profileStore
+} from './storeSingleton.js';
+
+import Login from './component/Login.js';
 import TabBarIndex from './component/TabBarIndex.js';
 
 class ImClient extends React.Component {
     render() {
-        return (
-            <Navigator
-                initialComponent={TabBarIndex}
-            />
-        );
+        if (profileStore.userInfo) {
+            return (
+                <Navigator
+                    initialComponent={TabBarIndex}
+                />
+            );
+        } else {
+            return (
+                <Login/>
+            );
+        }
     }
 }
 
