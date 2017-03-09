@@ -26,6 +26,7 @@ style            | React.Style     | 可选，导航栏样式
 Field                | Type            | Description
 :--------------------|:----------------|:---------------------------------
 component            | React.Component | 组件
+title                | String          | 导航栏标题
 renderRightComponent | Function        | 可选；右侧组件渲染函数
 isShowHeader         | Boolean         | 可选，默认 `true`; 是否展示导航栏
 

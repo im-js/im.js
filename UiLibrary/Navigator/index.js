@@ -94,11 +94,11 @@ class Navigator extends Component {
         });
     }
 
-    push = (component: Object, renderRightComponent: Function = () => {null;}, isShowHeader: boolean = true) => {
+    push = (component: Object, title: string = '', renderRightComponent: Function = () => {null;}, isShowHeader: boolean = true) => {
         this._compoentStack.push(component);
         let newStack = NavigationStateUtils.push(this.state.stack, {
             key: String(this.state.stack.index + 1),
-            title: component.NavigationTitle || '',
+            title: title || component.NavigationTitle || '',
             isShowHeader: isShowHeader,
             renderRightComponent: renderRightComponent
         });

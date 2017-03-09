@@ -18,12 +18,14 @@ import {
 } from '../../UiLibrary';
 
 import SessionList from './SessionList.js';
+import My from './My.js';
 
 class TabBarIndex extends React.Component {
     static NavigationTitle = '首页';
 
     render() {
-        console.log(TabBar);
+        let { navigator } = this.props;
+
         return (
             <TabBar>
                 <TabBar.Item
@@ -36,7 +38,9 @@ class TabBarIndex extends React.Component {
                         this.props.navigator.setNavigationTitle('首页');
                     }}
                 >
-                    <SessionList/>
+                    <SessionList
+                        navigator={this.props.navigator}
+                    />
                 </TabBar.Item>
 
                 <TabBar.Item
@@ -62,7 +66,9 @@ class TabBarIndex extends React.Component {
                         this.props.navigator.setNavigationTitle('我的');
                     }}
                 >
-                    <Text>C</Text>
+                    <My
+                        navigator={navigator}
+                    />
                 </TabBar.Item>
             </TabBar>
         );

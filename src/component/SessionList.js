@@ -19,6 +19,8 @@ import {
     View
 } from 'react-native';
 
+import ChatRoom from './ChatRoom.js';
+
 class SessionList extends Component {
     ds: Object;
     state: Object;
@@ -34,13 +36,13 @@ class SessionList extends Component {
 
         let rows = [
             {
-                avatar: 'https://s-media-cache-ak0.pinimg.com/236x/25/a1/71/25a171d9d10fb45329db5cce3613d1b3.jpg',
+                avatar: 'http://image-2.plusman.cn/app/im-client/avatar/tuzki_01.jpg',
                 userId: 'webTuzki',
                 latestTime: '下午3:00',
                 latestMessage: '让我们一起写RN'
             },
             {
-                avatar: 'https://s-media-cache-ak0.pinimg.com/736x/0a/b7/71/0ab771acf45a361273eeb170d5834d09.jpg',
+                avatar: 'http://image-2.plusman.cn/app/im-client/avatar/tuzki_02.png',
                 userId: 'rnTuzki',
                 latestTime: '2017/12/11',
                 latestMessage: '我是来自未来的 Tuzki'
@@ -64,13 +66,10 @@ class SessionList extends Component {
                             latestTime={rowData.latestTime}
                             latestMessage={rowData.latestMessage}
                             onPress={() => {
-                                this.props.navigate({
-                                    type: 'push',
-                                    route: {
-                                        key: 'chatRoom',
-                                        name: '聊天室'
-                                    }
-                                });
+                                this.props.navigator.push(
+                                    ChatRoom,
+                                    '聊天室'
+                                );
                             }}
                         />
                     }
