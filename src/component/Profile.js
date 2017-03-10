@@ -12,13 +12,18 @@
 import { observer } from 'mobx-react/native';
 import React, { Component } from 'react';
 import {
-    TouchableHighlight,
     StyleSheet,
     ScrollView,
     Image,
-    View,
-    Text
+    View
 } from 'react-native';
+
+import {
+    ListItem,
+    Button,
+    Color,
+    FontSize
+} from '../../UiLibrary';
 
 import {
     profileStore
@@ -39,115 +44,67 @@ class Profile extends Component {
             <ScrollView
                 style={styles.container}
             >
-                <View style={styles.space20} />
-
                 <View
                     style={styles.block}
                 >
-                    <EditCell
-                        {...this.props}
-                        title="头像"
-                        type="Image"
-                        imageUrl={profileStore.userInfo.avatar}
+                    <ListItem.Label
+                        labelText="头像"
+                        rightComponent={() => {
+                            return (
+                                <Image
+                                    style={styles.avatar}
+                                    source={{
+                                        uri: profileStore.userInfo.avatar
+                                    }}
+                                />
+                            );
+                        }}
                     />
-                    <View style={styles.blockLineBottom} />
 
-                    <EditCell
-                        {...this.props}
+                    <ListItem.Separator/>
+
+                    <ListItem.Label
                         onPress={() => {
                             this.props.navigator.push(ProfileItemEdit, '昵称');
                         }}
-                        title="昵称"
-                        value={profileStore.userInfo.name}
+                        labelText="昵称"
+                        rightComponent={profileStore.userInfo.name}
                     />
-                    <View style={styles.blockLineBottom} />
 
-                    <EditCell
-                        {...this.props}
-                        title="手机号"
-                        value={profileStore.userInfo.phone}
+                    <ListItem.Separator/>
+
+                    <ListItem.Label
+                        labelText="手机号"
+                        rightComponent={profileStore.userInfo.phone}
                     />
-                    <View style={styles.blockLineBottom} />
 
-                    <EditCell
-                        {...this.props}
-                        title="socketId"
-                        value={profileStore.userInfo.socketId}
+                    <ListItem.Separator/>
+
+                    <ListItem.Label
+                        labelText="socketId"
+                        rightComponent={profileStore.userInfo.socketId}
                     />
-                    <View style={styles.blockLineBottom} />
 
-                    <EditCell
-                        {...this.props}
-                        title="用户ID"
-                        value={'288'}
+                    <ListItem.Separator/>
+
+                    <ListItem.Label
+                        labelText="用户ID"
+                        rightComponent={profileStore.userInfo.userId}
                     />
                 </View>
 
-                <View style={styles.space20} />
+                <ListItem.Header/>
 
-                <TouchableHighlight
+                <Button
                     onPress={this._logout}
+                    isWithOutLine={false}
+                    style={styles.logoutButton}
+                    textStyle={styles.logoutTextStyle}
                 >
-                    <View style={styles.block}>
-                    <Text
-                        style={[styles.leftTitleText, styles.logout]}
-                    >退出登录</Text>
-                    </View>
-                </TouchableHighlight>
+                    退出登录
+                </Button>
 
             </ScrollView>
-        );
-    }
-}
-
-class EditCell extends Component {
-    render() {
-        return (
-            <TouchableHighlight
-                onPress={this.props.onPress}
-            >
-                <View
-                    style={styles.blockLine}
-                >
-                    <View
-                        style={styles.leftTitle}
-                    >
-                        <Text
-                            style={styles.leftTitleText}
-                        >
-                            {this.props.title}
-                        </Text>
-                    </View>
-                    <View
-                        style={styles.rightPart}
-                    >
-                        {this.props.type === 'Image' ? (
-                            <Image
-                                source={{
-                                    uri: this.props.imageUrl
-                                }}
-                                style={styles.avatar}
-                            />
-                        ) : (
-                            <Text
-                                style={styles.textValue}
-                            >
-                                {this.props.value}
-                            </Text>
-                        )}
-
-                        { this.props.onPress ? (
-                            <Image
-                                style={styles.arrow}
-                                source={{
-                                    uri: 'http://image-2.plusman.cn/app/im-client/arrow.png'
-                                }}
-                            />
-                        ) : (null)
-                        }
-                    </View>
-                </View>
-            </TouchableHighlight>
         );
     }
 }
@@ -155,52 +112,25 @@ class EditCell extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#E6E6E6'
+        backgroundColor: Color.BackgroundGrey,
+        paddingTop: 20
     },
-    space20: {
-        height: 20
-    },
-    block: {
-        backgroundColor: '#FFF',
+    avatar: {
         borderWidth: 1,
-        borderColor: '#DDDDE1'
+        borderColor: Color.Grey,
+        borderRadius: 6,
+        height: 60,
+        width: 60
     },
-    blockLine: {
-        paddingLeft: 10,
-        backgroundColor: '#FFF',
-        flexDirection: 'row',
-        alignItems: 'stretch',
-        justifyContent: 'space-between'
+    logoutButton: {
+        borderColor: Color.LittleGrey,
+        backgroundColor: Color.White,
+        borderWidth: 1,
+        paddingVertical: 5
     },
-    blockLineBottom: {
-        marginLeft: 10,
-        borderBottomWidth: 1,
-        borderColor: '#DDDDE1',
-    },
-    leftTitle: {
-        justifyContent: 'center'
-    },
-    leftTitleText: {
-        fontSize: 16,
-        fontWeight: '400',
-    },
-    rightPart: {
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    arrow: {
-        width: 20,
-        height: 20,
-        marginRight: 10
-    },
-    textValue: {
-        color: '#828282',
-        marginRight: 10,
-        marginVertical: 15
-    },
-    logout: {
-        textAlign: 'center',
-        marginVertical: 10
+    logoutTextStyle: {
+        color: Color.Black,
+        fontSize: FontSize.Main
     }
 });
 

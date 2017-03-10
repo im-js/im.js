@@ -19,6 +19,7 @@ import {
 
 import Color from '../Color';
 import FontSize from '../FontSize';
+import ListItemArrow from './ListItemArrow.js';
 
 export default class Label extends React.Component {
     static propTypes = {
@@ -29,7 +30,7 @@ export default class Label extends React.Component {
         labelStyle: PropTypes.any,
         rightComponent: PropTypes.any,
         // rightComponent 为文本时候生效
-        valueTextStyle: PropTypes.any,
+        textStyle: PropTypes.any,
         onPress: PropTypes.func
     };
 
@@ -57,14 +58,14 @@ export default class Label extends React.Component {
     }
 
     _renderRightCompoent = () => {
-        let { rightComponent, valueTextStyle } = this.props;
+        let { rightComponent, textStyle } = this.props;
 
-        if (typeof rightComponent === 'string') {
+        if (typeof rightComponent === 'string' || typeof rightComponent === 'number') {
             return (
                 <Text
                     style={[
-                        styles.valueTextStyle,
-                        valueTextStyle
+                        styles.textStyle,
+                        textStyle
                     ]}
                 >{rightComponent}</Text>
             );
@@ -79,12 +80,7 @@ export default class Label extends React.Component {
         let { onPress } = this.props;
         if (onPress) {
             return (
-                <Image
-                    style={styles.arrow}
-                    source={{
-                        uri: 'http://image-2.plusman.cn/app/im-client/arrow.png'
-                    }}
-                />
+                <ListItemArrow/>
             );
         }
 
@@ -167,13 +163,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center'
     },
-    valueTextStyle: {
+    textStyle: {
         color: Color.LightBlack,
         fontSize: FontSize.Content
-    },
-    arrow: {
-        marginLeft: 10,
-        width: FontSize.Content,
-        height: FontSize.Content
     }
 });

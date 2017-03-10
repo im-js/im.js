@@ -36,6 +36,14 @@ export default class TextInputDemo extends React.Component {
                     placeholder="点击此处输入"
                     labelText="用户名"
                 />
+
+                <ListItem.Header
+                    title="条状输入框"
+                />
+
+                <TextInput.Line
+                    placeholder="点击此处输入"
+                />
             </View>
         );
     }

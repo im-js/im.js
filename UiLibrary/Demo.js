@@ -104,14 +104,11 @@ class DemoListView extends Component {
     }
 
     _renderSeparator(sectionID: number, rowID: number, adjacentRowHighlighted: bool) {
-          return (
-            <View
+        return (
+            <ListItem.Separator
                 key={`${sectionID}-${rowID}`}
-                style={{
-                    height: 1
-                }}
             />
-          );
+        );
     }
 
     render() {

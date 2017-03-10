@@ -56,7 +56,6 @@ class ProfileStore {
         let result = await fetchLocal(config.server + `/v1/user/${userId}/status`, {
             method: 'delete',
         });
-
         if (result.success) {
             await AsyncStorage.removeItem(this.STORAGE_KEY);
             // 清空 userInfo
