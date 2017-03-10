@@ -41,7 +41,6 @@ class Button extends React.Component {
 
     constructor(props: Object) {
         super(props);
-        console.log(props.style);
     }
 
     _renderChildren() {

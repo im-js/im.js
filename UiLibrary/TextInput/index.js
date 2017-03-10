@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
         textAlign: 'right',
         fontSize: FontSize.Main,
         paddingHorizontal: 10,
-        color: Color.LightBlack
+        color: Color.Black
     },
     textInput: {
         flex: 1,

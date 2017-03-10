@@ -28,7 +28,7 @@ import Profile from './Profile.js';
 
  @observer
  class Setting extends Component {
-     constructor(props) {
+     constructor(props: Object) {
          super(props);
      }
 
@@ -52,7 +52,7 @@ import Profile from './Profile.js';
                          >
                              <Image
                                  source={{
-                                     uri: 'http://image-2.plusman.cn/app/im-client/avatar/tuzki_06.jpg'
+                                     uri: profileStore.userInfo.avatar
                                  }}
                                  style={styles.avatar}
                              />
@@ -62,37 +62,20 @@ import Profile from './Profile.js';
                                  <Text
                                      style={styles.name}
                                  >
-                                     {'plusman'}
+                                     {profileStore.userInfo.name}
                                  </Text>
 
                                  <Text
                                      style={styles.info}
                                  >
-                                     手机号: {'18667903755'}
+                                     手机号: {profileStore.userInfo.phone}
                                  </Text>
                              </View>
-                         </View>
-
-                         <View style={styles.rightBox}>
-                             <Image
-                                 style={styles.arrow}
-                                 source={{
-                                     uri: 'http://image-2.plusman.cn/app/im-client/arrow.png'
-                                 }}
-                             />
                          </View>
                      </View>
                  </TouchableHighlight>
              </ScrollView>
          );
-     }
-
-     componentWillUnmount() {
-         console.log('Setting componentWillUnmount');
-     }
-
-     componentWillMount() {
-         console.log('Setting componentWillMount');
      }
  }
 
@@ -124,9 +107,6 @@ import Profile from './Profile.js';
          flexDirection: 'row',
          alignItems: 'stretch'
      },
-     rightBox: {
-         justifyContent: 'center'
-     },
      userInfo: {
          justifyContent: 'space-around',
          marginVertical: 10
@@ -137,11 +117,6 @@ import Profile from './Profile.js';
      },
      info: {
          fontSize: 14
-     },
-     arrow: {
-         width: 20,
-         height: 20,
-         marginRight: 10
      }
  });
 

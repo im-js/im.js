@@ -31,13 +31,7 @@ class Profile extends Component {
     static NavigationTitle = '个人信息';
 
     _logout = async () => {
-        let result = await profileStore.logout(profileStore.userInfo.userId);
-
-        if (result.success) {
-            this.props.navigate({
-                type: 'clear'
-            });
-        }
+        await profileStore.logout(profileStore.userInfo.userId);
     }
 
     render() {
@@ -54,6 +48,7 @@ class Profile extends Component {
                         {...this.props}
                         title="头像"
                         type="Image"
+                        imageUrl={profileStore.userInfo.avatar}
                     />
                     <View style={styles.blockLineBottom} />
 
@@ -63,21 +58,21 @@ class Profile extends Component {
                             this.props.navigator.push(ProfileItemEdit, '昵称');
                         }}
                         title="昵称"
-                        value={'plusman'}
+                        value={profileStore.userInfo.name}
                     />
                     <View style={styles.blockLineBottom} />
 
                     <EditCell
                         {...this.props}
                         title="手机号"
-                        value={'18667903755'}
+                        value={profileStore.userInfo.phone}
                     />
                     <View style={styles.blockLineBottom} />
 
                     <EditCell
                         {...this.props}
                         title="socketId"
-                        value={'28399273'}
+                        value={profileStore.userInfo.socketId}
                     />
                     <View style={styles.blockLineBottom} />
 
@@ -129,7 +124,7 @@ class EditCell extends Component {
                         {this.props.type === 'Image' ? (
                             <Image
                                 source={{
-                                    uri: 'http://image-2.plusman.cn/app/im-client/avatar/tuzki_08.png'
+                                    uri: this.props.imageUrl
                                 }}
                                 style={styles.avatar}
                             />
@@ -192,14 +187,6 @@ const styles = StyleSheet.create({
     rightPart: {
         flexDirection: 'row',
         alignItems: 'center'
-    },
-    avatar: {
-        borderWidth: 1,
-        borderColor: '#A6A6A6',
-        borderRadius: 6,
-        margin: 10,
-        height: 60,
-        width: 60
     },
     arrow: {
         width: 20,

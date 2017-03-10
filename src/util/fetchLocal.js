@@ -14,17 +14,18 @@ import {
     Alert
 } from 'react-native';
 
-export default async function fetchLocal (input, init) {
+export default async function fetchLocal (input: string, init: Object): Object {
     try {
         let result = await fetch(input, init);
         let resultJson = await result.json();
 
         if (!resultJson.success) {
-            Alert.alert('ChatServer Error', resultJson.data.message);
+            Alert.alert('ImServer Error', resultJson.data.message);
         }
 
         return resultJson;
     } catch (e) {
+        console.error(e);
         Alert.alert('Fetch Error', e);
     }
 }

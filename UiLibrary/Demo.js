@@ -21,11 +21,13 @@ import TabBarDemo from './TabBar/test/index.js';
 import NavigatorDemo from './Navigator/test/index.js';
 import ButtonDemo from './Button/test/index.js';
 import TextInputDemo from './TextInput/test/index.js';
+import ListItemDemo from './ListItem/test/index.js';
 
 import {
     Navigator,
     FontSize,
-    Color
+    Color,
+    ListItem
 } from './index.js';
 
 class DemoListView extends Component {
@@ -66,6 +68,10 @@ class DemoListView extends Component {
                 {
                     name: 'TextInput',
                     component: TextInputDemo
+                },
+                {
+                    name: 'ListItem',
+                    component: ListItemDemo
                 }
             ]
         };
@@ -91,15 +97,9 @@ class DemoListView extends Component {
 
     _renderSectionHeader = (sectionData, sectionID, rowId) => {
         return (
-            <View
-                style={styles.sectionHeader}
-            >
-                <Text
-                    style={styles.sectionHeaderText}
-                >
-                    {sectionID}
-                </Text>
-            </View>
+            <ListItem.Header
+                title={sectionID}
+            />
         );
     }
 
@@ -152,16 +152,6 @@ const styles = StyleSheet.create({
         color: Color.Black,
         marginHorizontal: 15,
         fontSize: FontSize.Primary
-    },
-    sectionHeader: {
-        height: 30,
-        justifyContent: 'center',
-        paddingHorizontal: 15,
-        backgroundColor: Color.BackgroundGrey
-    },
-    sectionHeaderText: {
-        color: Color.LightBlack,
-        fontSize: FontSize.Annotation
     }
 });
 

@@ -18,15 +18,23 @@ import {
 } from 'react-native';
 
 class ProfileStore {
-    @observable userInfo = null;
-    STORAGE_KEY = 'USER_INFO';
+    @observable userInfo: any = null;
+    @observable isTryRestoreFromStorage = false;
+    STORAGE_KEY = 'IM_USER_INFO';
+
+    constructor() {
+        this._restoreUserInfoFromStorage();
+    }
 
     async _restoreUserInfoFromStorage () {
         let value = await AsyncStorage.getItem(this.STORAGE_KEY);
         this.userInfo = value ? JSON.parse(value) : value;
+
+        // 执行完毕
+        this.isTryRestoreFromStorage = true;
     }
 
-    async login(name, phone, socketId = '') {
+    async login(name: string, phone: string, socketId: string = '') {
         let result = await fetchLocal(config.server + '/v1/user', {
             method: 'POST',
             body: JSON.stringify({
@@ -44,13 +52,15 @@ class ProfileStore {
         return result;
     }
 
-    async logout(userId) {
+    async logout(userId: string) {
         let result = await fetchLocal(config.server + `/v1/user/${userId}/status`, {
             method: 'delete',
         });
 
         if (result.success) {
             await AsyncStorage.removeItem(this.STORAGE_KEY);
+            // 清空 userInfo
+            this.userInfo = null;
         }
 
         return result;

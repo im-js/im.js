@@ -11,6 +11,7 @@
 
 export { default as TabBar } from './TabBar';
 export { default as Navigator } from './Navigator';
+export { default as ListItem } from './ListItem';
 export { default as TextInput } from './TextInput';
 export { default as Button } from './Button';
 export { default as Color } from './Color';

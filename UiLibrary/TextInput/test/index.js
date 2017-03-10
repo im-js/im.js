@@ -13,33 +13,29 @@ import React from 'react';
 
 import {
     StyleSheet,
-    View,
-    Text
+    View
 } from 'react-native';
 
 import {
     TextInput,
-    Color,
-    FontSize
+    ListItem
 } from '../../index.js';
 
 export default class TextInputDemo extends React.Component {
+    static NavigationTitle = '输入框组';
+
     render() {
         return (
             <View
                 style={styles.container}
             >
-                <View
-                    style={styles.demoItem}
-                >
-                    <Text
-                        style={styles.tip}
-                    >带标签的输入框</Text>
-                    <TextInput.Label
-                        placeholder="点击此处输入"
-                        labelText="用户名"
-                    />
-                </View>
+                <ListItem.Header
+                    title="带标签的输入框"
+                />
+                <TextInput.Label
+                    placeholder="点击此处输入"
+                    labelText="用户名"
+                />
             </View>
         );
     }
@@ -48,14 +44,5 @@ export default class TextInputDemo extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1
-    },
-    demoItem: {
-        marginVertical: 20
-    },
-    tip: {
-        marginVertical: 10,
-        textAlign: 'center',
-        color: Color.LightBlack,
-        fontSize: FontSize.Annotation
     }
 });

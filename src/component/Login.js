@@ -9,24 +9,25 @@
  * 用户登录框
  */
 
-import { observer } from 'mobx-react/native';
 import React, {Component} from 'react';
 import {
     StyleSheet,
-    View,
-    Text,
-    TextInput
+    View
 } from 'react-native';
 
 import {
     FontSize,
     Button,
-    Color
+    Color,
+    TextInput
 } from '../../UiLibrary';
 
-@observer
+import {
+    profileStore
+} from '../storeSingleton.js';
+
 class Login extends Component {
-    // state: Object;
+    state: Object;
 
     constructor(props: Object) {
         super(props);
@@ -37,7 +38,22 @@ class Login extends Component {
         };
     }
 
-    componentWillMount() {
+    _login = async () => {
+        try {
+            await profileStore.login(
+                this.state.name,
+                this.state.phone
+            );
+            // toast
+        } catch (e) {
+            // toast
+        }
+    }
+
+    _onChangeText = () => {
+        this.setState({
+            isCanLogin: (this.state.name && this.state.phone)
+        });
     }
 
     render() {
@@ -45,23 +61,29 @@ class Login extends Component {
             <View
                 style={styles.container}
             >
-                <LabelInput
-                    label="昵称"
+                <TextInput.Label
+                    labelText="昵称"
+                    labelStyle={styles.labelStyle}
                     autoCapitalize="none"
                     placeholder="请填写昵称"
                     onChangeText={(name) => {
-                        this.setState({name});
+                        this.setState({name}, () => {
+                            this._onChangeText();
+                        });
                     }}
                     value={this.state.name}
                     returnKeyType="done"
                 />
 
-                <LabelInput
-                    label="手机号"
+                <TextInput.Label
+                    labelText="手机号"
+                    labelStyle={styles.labelStyle}
                     autoCapitalize="none"
                     placeholder="请填写11位手机号"
                     onChangeText={(phone) => {
-                        this.setState({phone});
+                        this.setState({phone}, () => {
+                            this._onChangeText();
+                        });
                     }}
                     value={this.state.phone}
                     returnKeyType="done"
@@ -71,7 +93,7 @@ class Login extends Component {
                     style={styles.loginButton}
                     textStyle={styles.loginText}
                     disabled={!this.state.isCanLogin}
-                    onPress={() => {}}
+                    onPress={this._login}
                 >
                 登录
                 </Button>
@@ -81,8 +103,14 @@ class Login extends Component {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#FFF',
+        paddingTop: 70,
+        paddingHorizontal: 20
+    },
     loginButton: {
-        margin: 20,
+        marginVertical: 20,
         borderColor: Color.WechatGreen,
         backgroundColor: Color.WechatGreen
     },
@@ -91,10 +119,9 @@ const styles = StyleSheet.create({
         fontSize: FontSize.Primary,
         paddingVertical: 10
     },
-    container: {
-        flex: 1,
-        backgroundColor: '#FFF',
-        paddingTop: 70
+    labelStyle: {
+        textAlign: 'left',
+        paddingHorizontal: 0
     }
 });
 
