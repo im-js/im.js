@@ -77,14 +77,6 @@ class SessionList extends Component {
             </View>
         );
     }
-
-    componentWillUnmount() {
-        console.log('FriendList componentWillUnmount');
-    }
-
-    componentWillMount() {
-        console.log('FriendList componentWillMount');
-    }
 }
 
 class ConversationCell extends Component {

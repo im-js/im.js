@@ -81,7 +81,11 @@ export default class ProfileItemEdit extends Component {
         });
     }
 
-    _handleSave = () => {
+    _handleSave = async () => {
+        let result = await profileStore.modifyUserInfo('name', this.state.value);
+        if (result.success) {
+            this.props.navigator.pop();
+        }
     }
 
     _onChangeText = (text) => {
