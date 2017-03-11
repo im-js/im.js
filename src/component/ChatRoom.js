@@ -59,6 +59,30 @@
                  avatar: 'https://s-media-cache-ak0.pinimg.com/736x/0a/b7/71/0ab771acf45a361273eeb170d5834d09.jpg',
                  uuid: '060E2685-2EDB-4DDA-A6D3-999BED6F6A79'
              },
+             {
+                 role: 'others',
+                 content: 'Bang! I\'am tuzki! Flexbox works the same way in React Native as it does in CSS on the web, with a few exceptions. The defaults are different, with flexDirection defaulting to column instead of row, and the flex parameter only supporting a single number. ',
+                 avatar: 'https://s-media-cache-ak0.pinimg.com/236x/25/a1/71/25a171d9d10fb45329db5cce3613d1b3.jpg',
+                 uuid: 'DA5BC26F-9CE7-444C-9F12-7E669C65AB81'
+             },
+             {
+                 role: 'myself',
+                 content: 'hi,💕,I\'am plusman! ',
+                 avatar: 'https://s-media-cache-ak0.pinimg.com/736x/0a/b7/71/0ab771acf45a361273eeb170d5834d09.jpg',
+                 uuid: '060E2685-2EDB-4DDA-A6D3-999BED6F6A79'
+             },
+             {
+                 role: 'others',
+                 content: 'Bang! I\'am tuzki! Flexbox works the same way in React Native as it does in CSS on the web, with a few exceptions. The defaults are different, with flexDirection defaulting to column instead of row, and the flex parameter only supporting a single number. ',
+                 avatar: 'https://s-media-cache-ak0.pinimg.com/236x/25/a1/71/25a171d9d10fb45329db5cce3613d1b3.jpg',
+                 uuid: 'DA5BC26F-9CE7-444C-9F12-7E669C65AB81'
+             },
+             {
+                 role: 'myself',
+                 content: 'hi,💕,I\'am plusman! ',
+                 avatar: 'https://s-media-cache-ak0.pinimg.com/736x/0a/b7/71/0ab771acf45a361273eeb170d5834d09.jpg',
+                 uuid: '060E2685-2EDB-4DDA-A6D3-999BED6F6A79'
+             }
          ];
 
          this.state = {
@@ -136,7 +160,7 @@
                      placeholder="Type here to send message"
                      blurOnSubmit={true}
                      // autoFocus={true}
-                     keepKeyboardPersistent={true}
+                    //  keepKeyboardPersistent={true}
                      // ios only
                      enablesReturnKeyAutomatically={true}
                      onContentSizeChange={

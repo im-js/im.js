@@ -28,7 +28,7 @@ class TabBarIndex extends React.Component {
 
         return (
             <TabBar
-                activeIndex={2}
+                activeIndex={0}
             >
                 <TabBar.Item
                     title="首页"
