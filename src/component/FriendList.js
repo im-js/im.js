@@ -64,10 +64,14 @@ class FriendList extends React.Component {
         return (
             <ListItem.Label
                 icon={row.avatar}
-                labelText={row.name}
+                labelText={row.name + (row.status === 'online' ? '' : '  (离线)')}
                 onPress={()=>{
                     this.props.navigator.push(ChatRoom, row.name, {
-                        to: row.userId
+                        toInfo: {
+                            userId: row.userId,
+                            avatar: row.avatar,
+                            name: row.name
+                        }
                     });
                 }}
             />

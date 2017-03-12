@@ -18,7 +18,7 @@ import FriendList from './FriendList.js';
 import My from './My.js';
 
 class TabBarIndex extends React.Component {
-    static NavigationTitle = '首页';
+    static NavigationTitle = '会话';
 
     render() {
         let { navigator } = this.props;
@@ -28,13 +28,13 @@ class TabBarIndex extends React.Component {
                 activeIndex={0}
             >
                 <TabBar.Item
-                    title="首页"
+                    title="会话"
                     color="#BBBAC1"
                     tintColor="#1EA114"
                     icon="http://image-2.plusman.cn/app/im-client/message.png"
                     tintIcon="http://image-2.plusman.cn/app/im-client/message-reverse.png"
                     onPress={() => {
-                        this.props.navigator.setNavigationTitle('首页');
+                        this.props.navigator.setNavigationTitle('会话');
                     }}
                 >
                     <SessionList

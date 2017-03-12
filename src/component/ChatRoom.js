@@ -35,7 +35,7 @@ import {
 
 export default class ChatRoom extends Component {
     // 接收者 ID
-    to: any;
+    toInfo: Object;
     firstEnter: number;
     ds: Object;
     rows: Object[];
@@ -44,7 +44,7 @@ export default class ChatRoom extends Component {
 
     constructor(props: Object) {
         super(props);
-        this.to = props.to;
+        this.toInfo = props.toInfo;
         this.firstEnter = 0;
         this.ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => {
@@ -71,7 +71,7 @@ export default class ChatRoom extends Component {
     }
 
     _handleMessage = (data) => {
-        if (data.from === this.to) {
+        if (data.from === this.toInfo.userId) {
             this.rows.push(data);
             this.setState({
                 dataSource: this.ds.cloneWithRows(this.rows)
@@ -96,7 +96,7 @@ export default class ChatRoom extends Component {
         let { userInfo } = profileStore;
         let payload = {
             from: userInfo.userId,
-            to: this.to,
+            to: this.toInfo.userId,
             uuid: uuid.v4(),
             msg: {
                 type: 'txt',
@@ -117,6 +117,12 @@ export default class ChatRoom extends Component {
 
         // 远程发送
         socketStore.socket.emit('peerMessage', payload);
+        // 本地会话列表更新
+        socketStore.pushLocalePayload(Object.assign({
+            localeExt: {
+                toInfo: this.toInfo
+            }
+        }, payload));
     }
 
     _renderRow(row) {

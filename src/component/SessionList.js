@@ -58,7 +58,7 @@ class SessionList extends React.Component {
                         ChatRoom,
                         row.name,
                         {
-                            to: row.from
+                            toInfo: row.toInfo
                         }
                     );
                 }}
