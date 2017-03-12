@@ -9,7 +9,8 @@
  * 聊天会话窗口
  */
 
-import React, { Component } from 'react';
+import { observer } from 'mobx-react/native';
+import React, { PropTypes} from 'react';
 import {
     TouchableHighlight,
     StyleSheet,
@@ -19,9 +20,19 @@ import {
     View
 } from 'react-native';
 
+import {
+    FontSize,
+    Color
+} from '../../UiLibrary';
+
+import {
+    socketStore
+} from '../storeSingleton.js';
+
 import ChatRoom from './ChatRoom.js';
 
-class SessionList extends Component {
+@observer
+class SessionList extends React.Component {
     ds: Object;
     state: Object;
 
@@ -33,64 +44,86 @@ class SessionList extends Component {
                 return r1.userId !== r2.userId;
             }
         });
+    }
 
-        let rows = [
-            {
-                avatar: 'http://image-2.plusman.cn/app/im-client/avatar/tuzki_01.jpg',
-                userId: 'webTuzki',
-                latestTime: '下午3:00',
-                latestMessage: '让我们一起写RN'
-            },
-            {
-                avatar: 'http://image-2.plusman.cn/app/im-client/avatar/tuzki_02.png',
-                userId: 'rnTuzki',
-                latestTime: '2017/12/11',
-                latestMessage: '我是来自未来的 Tuzki'
-            }
-        ];
-
-        this.state = {
-            dataSource: this.ds.cloneWithRows(rows)
-        };
+    _renderRow = (row) => {
+        return (
+            <ConversationCell
+                avatar={row.avatar}
+                name={row.name}
+                latestTime={row.latestTime}
+                latestMessage={row.latestMessage}
+                onPress={() => {
+                    this.props.navigator.push(
+                        ChatRoom,
+                        row.name,
+                        {
+                            to: row.from
+                        }
+                    );
+                }}
+            />
+        );
     }
 
     render() {
-        return (
-            <View style={styles.container}>
-                <ListView
-                    dataSource={this.state.dataSource}
-                    renderRow={ (rowData) =>
-                        <ConversationCell
-                            avatar={rowData.avatar}
-                            userId={rowData.userId}
-                            latestTime={rowData.latestTime}
-                            latestMessage={rowData.latestMessage}
-                            onPress={() => {
-                                this.props.navigator.push(
-                                    ChatRoom,
-                                    '聊天室'
-                                );
-                            }}
-                        />
-                    }
-                />
-            </View>
-        );
+        if (socketStore.sessionList.length) {
+            return (
+                <View style={styles.container}>
+                    <ListView
+                        dataSource={this.ds.cloneWithRows(socketStore.sessionList)}
+                        enableEmptySections={true}
+                        renderRow={this._renderRow}
+                    />
+                </View>
+            );
+        } else {
+            return (
+                <View
+                    style={styles.emptyMessage}
+                >
+                    <Image
+                        source={{
+                            uri: 'http://image-2.plusman.cn/app/im-client/empty-message.png'
+                        }}
+                        style={styles.emptyMessageImage}
+                    />
+                    <Text
+                        style={styles.emptyMessageText}
+                    >暂无消息</Text>
+                </View>
+            );
+        }
     }
 }
 
-class ConversationCell extends Component {
+
+class ConversationCell extends React.Component {
+    static propTypes = {
+        avatar: PropTypes.string.isRequired,
+        name: PropTypes.any.isRequired,
+        latestTime: PropTypes.string.isRequired,
+        latestMessage: PropTypes.string.isRequired,
+        onPress: PropTypes.func.isRequired
+    }
+
+    constructor(props) {
+        super(props);
+    }
+
     render() {
+        let { avatar, name, latestTime, latestMessage, onPress } = this.props;
+
         return (
             <TouchableHighlight
-                onPress={this.props.onPress}
+                onPress={onPress}
             >
                 <View
                     style={styles.ConversationCell}
                 >
                     <Image
                         source={{
-                            uri: this.props.avatar
+                            uri: avatar
                         }}
                         style={styles.avatar}
                     />
@@ -100,22 +133,20 @@ class ConversationCell extends Component {
                         <View
                             style={styles.boxCeil}
                         >
-                            <Text>{this.props.userId}</Text>
+                            <Text>{name}</Text>
                             <Text
                                 style={styles.latestTime}
-                            >{this.props.latestTime}</Text>
+                            >{latestTime}</Text>
                         </View>
                         <Text
                             style={styles.boxFloor}
-                        >{this.props.latestMessage}</Text>
+                        >{latestMessage}</Text>
                     </View>
                 </View>
             </TouchableHighlight>
         );
     }
 }
-
-
 
 const styles = StyleSheet.create({
     container: {
@@ -153,6 +184,20 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40
     },
+    emptyMessage: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    emptyMessageImage: {
+        width: 90,
+        height: 90,
+        opacity: 0.6
+    },
+    emptyMessageText: {
+        color: Color.LightBlack,
+        fontSize: FontSize.Annotation
+    }
 });
 
 export default SessionList;

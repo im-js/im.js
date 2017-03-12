@@ -59,15 +59,24 @@ export default class ChatRoom extends Component {
             textInputHeight: 40,
             inputValue: ''
         };
+    }
 
+    componentWillMount() {
         // 监听消息发送
-        socketStore.socket.on('message',  (data) => {
+        socketStore.socket.on('message',  this._handleMessage);
+    }
+
+    componentWillUnmount() {
+        socketStore.socket.off('message', this._handleMessage);
+    }
+
+    _handleMessage = (data) => {
+        if (data.from === this.to) {
             this.rows.push(data);
             this.setState({
                 dataSource: this.ds.cloneWithRows(this.rows)
             });
-        });
-
+        }
     }
 
     _scrollToBottom () {
@@ -94,7 +103,8 @@ export default class ChatRoom extends Component {
                 content: this.state.inputValue
             },
             ext: {
-                avatar: userInfo.avatar
+                avatar: userInfo.avatar,
+                name: userInfo.name
             }
         };
 

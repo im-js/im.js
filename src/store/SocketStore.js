@@ -6,15 +6,16 @@
  *
  * @flow
  *
- * Socket 管理
+ * Socket 管理，消息中继站
  */
-import { observable } from 'mobx';
+import { observable, computed, toJS } from 'mobx';
 
 import config from '../config.js';
 import io from 'socket.io-client';
 
 export default class SocketStore {
     @observable socketId = null;
+    sessionListMap = observable.map();
     socket: Object;
 
     constructor() {
@@ -26,7 +27,23 @@ export default class SocketStore {
         this.socket.on('connect', () => {
             this.socketId = this.socket.id;
         });
+
+        this.socket.on('message' , (data) => {
+            let payload = {
+                avatar: data.ext.avatar,
+                name: data.ext.name,
+                latestTime: data.ext.displayTime,
+                latestMessage: data.msg.content,
+                from: data.from
+            };
+
+            this.sessionListMap.set(String(data.from), payload);
+        });
     }
 
-    // 频道订阅
+    @computed get sessionList(): Array<Object> {
+        return [...this.sessionListMap.values()].sort(function(a, b) {
+            return b.timestamp - a.timestamp;
+        });
+    }
 }

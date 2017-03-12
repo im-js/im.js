@@ -10,10 +10,6 @@
  */
 import React from 'react';
 import {
-    Text
-} from 'react-native';
-
-import {
     TabBar
 } from '../../UiLibrary';
 
