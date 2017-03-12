@@ -12,26 +12,39 @@
 import uuid from 'uuid';
 import React, { Component } from 'react';
 import {
-  StyleSheet,
-  ListView,
-  Image,
-  Text,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  View
+    KeyboardAvoidingView,
+    StyleSheet,
+    ListView,
+    Image,
+    Text,
+    TextInput,
+    Platform,
+    View
 } from 'react-native';
 
+import {
+    FontSize,
+    Color,
+    Button
+} from '../../UiLibrary';
+
+import {
+    socketStore,
+    profileStore
+} from '../storeSingleton.js';
+
 export default class ChatRoom extends Component {
+    // 接收者 ID
+    to: any;
     firstEnter: number;
     ds: Object;
     rows: Object[];
     state: Object;
     chatListView: Object;
 
-    constructor () {
-        super();
-
+    constructor(props: Object) {
+        super(props);
+        this.to = props.to;
         this.firstEnter = 0;
         this.ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => {
@@ -39,52 +52,7 @@ export default class ChatRoom extends Component {
             }
         });
 
-        // this.socket.on('connect', () =>{
-            // this.socket.emit('registry', {
-                // userId: 'rnTuzki',
-                // avatar: 'https://s-media-cache-ak0.pinimg.com/736x/0a/b7/71/0ab771acf45a361273eeb170d5834d09.jpg',
-                // socketId: this.socket.id
-            // });
-        // });
-
-        this.rows = [
-            {
-                role: 'others',
-                content: 'Bang! I\'am tuzki! Flexbox works the same way in React Native as it does in CSS on the web, with a few exceptions. The defaults are different, with flexDirection defaulting to column instead of row, and the flex parameter only supporting a single number. ',
-                avatar: 'https://s-media-cache-ak0.pinimg.com/236x/25/a1/71/25a171d9d10fb45329db5cce3613d1b3.jpg',
-                uuid: 'DA5BC26F-9CE7-444C-9F12-7E669C65AB81'
-            },
-            {
-                role: 'myself',
-                content: 'hi,💕,I\'am plusman! ',
-                avatar: 'https://s-media-cache-ak0.pinimg.com/736x/0a/b7/71/0ab771acf45a361273eeb170d5834d09.jpg',
-                uuid: '060E2685-2EDB-4DDA-A6D3-999BED6F6A79'
-            },
-            {
-                role: 'others',
-                content: 'Bang! I\'am tuzki! Flexbox works the same way in React Native as it does in CSS on the web, with a few exceptions. The defaults are different, with flexDirection defaulting to column instead of row, and the flex parameter only supporting a single number. ',
-                avatar: 'https://s-media-cache-ak0.pinimg.com/236x/25/a1/71/25a171d9d10fb45329db5cce3613d1b3.jpg',
-                uuid: 'DA5BC26F-9CE7-444C-9F12-7E669C65AB81'
-            },
-            {
-                role: 'myself',
-                content: 'hi,💕,I\'am plusman! ',
-                avatar: 'https://s-media-cache-ak0.pinimg.com/736x/0a/b7/71/0ab771acf45a361273eeb170d5834d09.jpg',
-                uuid: '060E2685-2EDB-4DDA-A6D3-999BED6F6A79'
-            },
-            {
-                role: 'others',
-                content: 'Bang! I\'am tuzki! Flexbox works the same way in React Native as it does in CSS on the web, with a few exceptions. The defaults are different, with flexDirection defaulting to column instead of row, and the flex parameter only supporting a single number. ',
-                avatar: 'https://s-media-cache-ak0.pinimg.com/236x/25/a1/71/25a171d9d10fb45329db5cce3613d1b3.jpg',
-                uuid: 'DA5BC26F-9CE7-444C-9F12-7E669C65AB81'
-            },
-            {
-                role: 'myself',
-                content: 'hi,💕,I\'am plusman! ',
-                avatar: 'https://s-media-cache-ak0.pinimg.com/736x/0a/b7/71/0ab771acf45a361273eeb170d5834d09.jpg',
-                uuid: '060E2685-2EDB-4DDA-A6D3-999BED6F6A79'
-            },
-        ];
+        this.rows = [];
 
         this.state = {
             dataSource: this.ds.cloneWithRows(this.rows),
@@ -93,18 +61,12 @@ export default class ChatRoom extends Component {
         };
 
         // 监听消息发送
-        // this.socket.on('message',  (data) => {
-            // this.rows.push({
-                // role: 'others',
-                // content: data.content,
-                // avatar: data.avatar,
-                // uuid: data.uuid
-            // });
-
-            // this.setState({
-                // dataSource: this.ds.cloneWithRows(this.rows)
-            // });
-        // });
+        socketStore.socket.on('message',  (data) => {
+            this.rows.push(data);
+            this.setState({
+                dataSource: this.ds.cloneWithRows(this.rows)
+            });
+        });
 
     }
 
@@ -120,6 +82,42 @@ export default class ChatRoom extends Component {
         });
     }
 
+    _onSubmitEditing = () => {
+        // 数据组装
+        let { userInfo } = profileStore;
+        let payload = {
+            from: userInfo.userId,
+            to: this.to,
+            uuid: uuid.v4(),
+            msg: {
+                type: 'txt',
+                content: this.state.inputValue
+            },
+            ext: {
+                avatar: userInfo.avatar
+            }
+        };
+
+        // 本地更新
+        this.rows.push(payload);
+        this.setState({
+            dataSource: this.ds.cloneWithRows(this.rows)
+        });
+        this.setState({ inputValue: '' });
+
+        // 远程发送
+        socketStore.socket.emit('peerMessage', payload);
+    }
+
+    _renderRow(row) {
+        return (
+            <MessageCell
+                currentUser={profileStore.userInfo.userId}
+                message={row}
+            />
+        );
+    }
+
     render() {
         let content = (
             <View
@@ -128,6 +126,7 @@ export default class ChatRoom extends Component {
                 <ListView
                     ref={(reference) => { this.chatListView = reference; }}
                     dataSource={this.state.dataSource}
+                    enableEmptySections={true}
                     onLayout={
                         (event) => {
                             this._scrollToBottom();
@@ -138,57 +137,43 @@ export default class ChatRoom extends Component {
                             this._scrollToBottom();
                         }
                     }
-                    renderRow={ (rowData) =>
-                        <MessageCell
-                            role={rowData.role}
-                            content={rowData.content}
-                            avatar={rowData.avatar}
-                        />
-                    }
+                    renderRow={this._renderRow}
                 />
 
-                <TextInput
-                    style={[styles.input, {
-                        height: Math.max(40, this.state.textInputHeight < 180 ? this.state.textInputHeight : 180 )
-                    }]}
-                    multiline={true}
-                    controlled={true}
-                    returnKeyType="send"
-                    value={this.state.inputValue}
-                    placeholder="Type here to send message"
-                    // ios only
-                    enablesReturnKeyAutomatically={true}
-                    onContentSizeChange={
-                        (event) => {
-                            this.setState({textInputHeight: event.nativeEvent.contentSize.height});
+                <View
+                    style={styles.bottomToolBar}
+                >
+                    <TextInput
+                        style={[styles.input, {
+                            height: Math.max(40, this.state.textInputHeight < 180 ? this.state.textInputHeight : 180 )
+                        }]}
+                        multiline={true}
+                        controlled={true}
+                        underlineColorAndroid="transparent"
+                        returnKeyType="default"
+                        value={this.state.inputValue}
+                        placeholder="Type here to send message"
+                        // ios only
+                        enablesReturnKeyAutomatically={true}
+                        onContentSizeChange={
+                            (event) => {
+                                this.setState({textInputHeight: event.nativeEvent.contentSize.height});
+                            }
                         }
-                    }
-                    onSubmitEditing={
-                        (event) => {
-                            // this.socket.emit('peerMessage', {
-                                // content: this.state.inputValue,
-                                // from: 'rnTuzki',
-                                // to: 'webTuzki'
-                            // });
-
-                            this.rows.push({
-                                role: 'myself',
-                                content: this.state.inputValue,
-                                avatar: 'https://s-media-cache-ak0.pinimg.com/736x/0a/b7/71/0ab771acf45a361273eeb170d5834d09.jpg',
-                                uuid: uuid.v4()
-                            });
-
-                            this.setState({
-                                dataSource: this.ds.cloneWithRows(this.rows)
-                            });
-
-                            this.setState({ inputValue: '' });
-                        }
-                    }
-                    onChangeText={ (text) => {
+                        onChangeText={ (text) => {
                             this.setState({ inputValue: text });
-                    }}
-                />
+                        }}
+                    />
+
+                    <Button
+                        style={styles.sendButton}
+                        textStyle={styles.sendButtonText}
+                        disabled={!this.state.inputValue}
+                        onPress={this._onSubmitEditing}
+                    >
+                        发送
+                    </Button>
+                </View>
             </View>
         );
 
@@ -210,8 +195,10 @@ export default class ChatRoom extends Component {
 
 class MessageCell extends Component {
     render() {
+        let { currentUser, message } = this.props;
+
         let differentStyle = {};
-        if (this.props.role === 'myself') {
+        if (message.from === currentUser) {
             differentStyle = {
                 flexDirection: 'row-reverse',
                 backgroundColor: '#92E649'
@@ -227,14 +214,14 @@ class MessageCell extends Component {
             <View style={[styles.messageCell, {flexDirection: differentStyle.flexDirection}]}>
                 <Image
                     source={{
-                        uri: this.props.avatar
+                        uri: message.ext.avatar
                     }}
                     style={styles.avatar}
                 />
                 <View
                     style={[styles.contentView, {backgroundColor: differentStyle.backgroundColor}]}
                 >
-                    <Text style={styles.messageCellText}>{this.props.content}</Text>
+                    <Text style={styles.messageCellText}>{message.msg.content}</Text>
                 </View>
                 <View style={styles.endBlankBlock} />
             </View>
@@ -247,25 +234,37 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-start',
         alignItems: 'stretch',
-        backgroundColor: '#E6E6E6'
+        backgroundColor: Color.BackgroundGrey
     },
     KeyboardAvoidingView: {
         flex: 1
     },
+    bottomToolBar: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderTopWidth: 1,
+        borderTopColor: Color.LittleGrey
+    },
+    sendButton: {
+        marginHorizontal: 10,
+        backgroundColor: Color.WechatGreen,
+        borderColor: Color.WechatGreen
+    },
+    sendButtonText: {
+        color: Color.White
+    },
     input: {
-        fontSize: 17,
-        padding: 10,
-        borderWidth: 1,
-        borderColor: '#E0E0E1'
+        flex: 1,
+        color: Color.Black,
+        fontSize: FontSize.Main,
+        padding: 10
     },
     messageCell: {
-        // backgroundColor: '#4682b4',
         marginTop: 5,
         marginBottom: 5,
     },
     messageCellText: {
-        // backgroundColor: '#4682b4',
-        fontSize: 14
+        fontSize: FontSize.Content
     },
     avatar: {
         borderRadius: 4,

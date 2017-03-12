@@ -10,5 +10,12 @@
  */
 
 import ProfileStore from './store/ProfileStore.js';
+import SocketStore from './store/SocketStore.js';
 
-export const profileStore = new ProfileStore();
+const socketStore = new SocketStore();
+const profileStore = new ProfileStore(socketStore);
+
+export {
+    socketStore,
+    profileStore
+};

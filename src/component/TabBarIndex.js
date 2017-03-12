@@ -18,6 +18,7 @@ import {
 } from '../../UiLibrary';
 
 import SessionList from './SessionList.js';
+import FriendList from './FriendList.js';
 import My from './My.js';
 
 class TabBarIndex extends React.Component {
@@ -28,7 +29,7 @@ class TabBarIndex extends React.Component {
 
         return (
             <TabBar
-                activeIndex={1}
+                activeIndex={0}
             >
                 <TabBar.Item
                     title="首页"
@@ -55,7 +56,9 @@ class TabBarIndex extends React.Component {
                         this.props.navigator.setNavigationTitle('通讯录');
                     }}
                 >
-                    <Text>B</Text>
+                    <FriendList
+                        navigator={navigator}
+                    />
                 </TabBar.Item>
 
                 <TabBar.Item

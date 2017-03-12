@@ -8,30 +8,113 @@
  *
  * 好友列表
  */
-
+import { toJS } from 'mobx';
 import { observer } from 'mobx-react/native';
-import React, { PropType } from 'react';
+import React from 'react';
 import {
+    RefreshControl,
     StyleSheet,
-    View,
     ListView,
 } from 'react-native';
 
 import {
-    Color,
-    FontSize,
     ListItem
 } from '../../UiLibrary';
 
+import { profileStore } from '../storeSingleton.js';
+import ChatRoom from './ChatRoom.js';
+
 @observer
 class FriendList extends React.Component {
-    constructor(props) {
+    state: Object;
+    ds: Object;
+
+    constructor(props: Object) {
         super(props);
+
+        this.ds = new ListView.DataSource({
+            rowHasChanged: function (r1, r2) {
+                return r1.userId !== r2.userId;
+            },
+            // REVIEW: s1, s2 的返回值不确定，需要再次确认
+            sectionHeaderHasChanged: function (s1, s2) {
+                console.log('👁', s1, s2);
+                return s1 !== s2;
+            }
+        });
+
+        this.state = {
+            refreshing: false
+        };
     }
+
+    _onRefresh = async () => {
+        this.setState({
+            refreshing: true
+        });
+
+        await profileStore.getOnlineList();
+
+        this.setState({
+            refreshing: false
+        });
+    }
+
+    _renderRow = (row) => {
+        return (
+            <ListItem.Label
+                icon={row.avatar}
+                labelText={row.name}
+                onPress={()=>{
+                    this.props.navigator.push(ChatRoom, row.name, {
+                        to: row.userId
+                    });
+                }}
+            />
+        );
+    }
+
+    _renderSectionHeader = (sectionData, sectionID, rowId) => {
+        return (
+            <ListItem.Header
+                title={sectionID.toUpperCase()}
+            />
+        );
+    }
+
+    _renderSeparator(sectionID: number, rowID: number, adjacentRowHighlighted: bool) {
+        return (
+            <ListItem.Separator
+                key={`${sectionID}-${rowID}`}
+            />
+        );
+    }
+
 
     render() {
-
+        return (
+            <ListView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this._onRefresh}
+                    />
+                }
+                style={styles.container}
+                dataSource={this.ds.cloneWithRowsAndSections(toJS(profileStore.friendList))}
+                renderSectionHeader={this._renderSectionHeader}
+                renderSeparator={this._renderSeparator}
+                renderRow={this._renderRow}
+                enableEmptySections={true}
+            />
+        );
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    }
+});
 
 export default FriendList;

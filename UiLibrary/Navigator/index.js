@@ -94,13 +94,14 @@ class Navigator extends Component {
         });
     }
 
-    push = (component: Object, title: string = '', renderRightComponent: Function = () => {null;}, isShowHeader: boolean = true) => {
+    push = (component: Object, title: string = '', props: Object = {}, renderRightComponent: Function = () => {null;}, isShowHeader: boolean = true) => {
         this._compoentStack.push(component);
         let newStack = NavigationStateUtils.push(this.state.stack, {
             key: String(this.state.stack.index + 1),
             title: title || component.NavigationTitle || '',
             isShowHeader: isShowHeader,
-            renderRightComponent: renderRightComponent
+            renderRightComponent: renderRightComponent,
+            props: props
         });
 
         this.setState({
@@ -169,6 +170,7 @@ class Navigator extends Component {
                 isActive={scene.isActive}
             >
                 <RenderCompoent
+                    {...scene.route.props}
                     navigator={this}
                 />
             </StaticContainer>

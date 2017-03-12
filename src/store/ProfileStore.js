@@ -9,7 +9,7 @@
  * 用户信息
  */
 
-import { observable } from 'mobx';
+import { autorun, observable } from 'mobx';
 import config from '../config.js';
 import fetchLocal from '../util/fetchLocal.js';
 
@@ -19,20 +19,42 @@ import {
 
 class ProfileStore {
     @observable userInfo: any = null;
+    @observable friendList: Object = {};
     @observable isTryRestoreFromStorage = false;
-    STORAGE_KEY = 'IM_USER_INFO';
+    STORAGE_KEY_USER_INFO = 'IM_USER_INFO';
+    STORAGE_KEY_FRIEND_LIST = 'IM_FRIEND_LIST';
 
-    constructor() {
+    socket: Object;
+
+    constructor(socket: Object) {
+        //  绑定 socket 对象
+        this.socket = socket;
+
+        // 恢复用户信息
         this._restoreUserInfoFromStorage();
+        // 拉取好友
+        this.getOnlineList();
+
+        // socket 信息跟踪
+        autorun(this.updateSocketInfo);
     }
 
     // 从本地缓存恢复用户信息
     async _restoreUserInfoFromStorage () {
-        let value = await AsyncStorage.getItem(this.STORAGE_KEY);
+        let value = await AsyncStorage.getItem(this.STORAGE_KEY_USER_INFO);
         this.userInfo = value ? JSON.parse(value) : value;
 
         // 执行完毕
         this.isTryRestoreFromStorage = true;
+    }
+
+    // 更新用户的 socket 信息
+    updateSocketInfo = async () => {
+        if (this.userInfo && this.socket.socketId) {
+            if (this.socket.socketId !== this.userInfo.socketId) {
+                await this.modifyUserInfo('socketId', this.socket.socketId);
+            }
+        }
     }
 
     // 更新用户信息
@@ -47,7 +69,7 @@ class ProfileStore {
 
         if (result.success) {
             this.userInfo = result.data;
-            AsyncStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.userInfo));
+            AsyncStorage.setItem(this.STORAGE_KEY_USER_INFO, JSON.stringify(result.data));
         }
 
         return result;
@@ -66,7 +88,7 @@ class ProfileStore {
 
         if (result.success) {
             this.userInfo = result.data;
-            AsyncStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.userInfo));
+            AsyncStorage.setItem(this.STORAGE_KEY_USER_INFO, JSON.stringify(this.userInfo));
         }
 
         return result;
@@ -78,9 +100,22 @@ class ProfileStore {
             method: 'delete',
         });
         if (result.success) {
-            await AsyncStorage.removeItem(this.STORAGE_KEY);
+            await AsyncStorage.removeItem(this.STORAGE_KEY_USER_INFO);
             // 清空 userInfo
             this.userInfo = null;
+        }
+
+        return result;
+    }
+
+    // 拉取在线用户列表
+    async getOnlineList() {
+        let url = config.server + '/v1/user/online/list';
+        let result = await fetchLocal(url);
+
+        if (result.success) {
+            this.friendList = result.data;
+            AsyncStorage.setItem(this.STORAGE_KEY_FRIEND_LIST, JSON.stringify(result.data));
         }
 
         return result;

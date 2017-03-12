@@ -14,7 +14,7 @@ import {
     Alert
 } from 'react-native';
 
-export default async function fetchLocal (input: string, init: Object): Object {
+export default async function fetchLocal (input: string, init?: Object): Object {
     try {
         let result = await fetch(input, init);
         let resultJson = await result.json();

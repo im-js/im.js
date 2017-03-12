@@ -11,6 +11,7 @@
     "mobx-react": "^4.1.2",
     "react": "^15.4.2",
     "react-native": "^0.42.0",
+    "socket.io-client": "^1.7.3",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
