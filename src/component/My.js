@@ -27,7 +27,8 @@ import {
 } from '../../UiLibrary';
 
 import {
-    profileStore
+    profileStore,
+    socketStore
 } from '../storeSingleton.js';
 
 import Profile from './Profile.js';
@@ -81,6 +82,31 @@ class Setting extends Component {
                         <ListItem.Arrow/>
                     </View>
                 </TouchableHighlight>
+
+                <ListItem.Header/>
+
+                <ListItem.Label
+                    onPress={() => {
+                        socketStore._saveDataToLocalStore();
+                    }}
+                    labelText="保存"
+                />
+                <ListItem.Separator/>
+
+                <ListItem.Label
+                    onPress={() => {
+                        socketStore._restoreDataFromLocalStore();
+                    }}
+                    labelText="恢复"
+                />
+                <ListItem.Separator/>
+
+                <ListItem.Label
+                    onPress={() => {
+                        socketStore._clearLocalStore();
+                    }}
+                    labelText="清空缓存"
+                />
             </ScrollView>
         );
     }

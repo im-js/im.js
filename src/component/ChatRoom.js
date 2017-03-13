@@ -5,10 +5,11 @@
  * reserved.
  *
  * @flow
- *
  * 聊天室
+ *
+ * TODO: 聊天室有两次渲染问题
  */
-
+import { observer } from 'mobx-react/native';
 import uuid from 'uuid';
 import React, { Component } from 'react';
 import {
@@ -33,7 +34,8 @@ import {
     profileStore
 } from '../storeSingleton.js';
 
-export default class ChatRoom extends Component {
+@observer
+class ChatRoom extends Component {
     // 接收者 ID
     toInfo: Object;
     firstEnter: number;
@@ -46,37 +48,17 @@ export default class ChatRoom extends Component {
         super(props);
         this.toInfo = props.toInfo;
         this.firstEnter = 0;
+        socketStore.currentChatKey  = `${profileStore.userInfo.userId}-${this.toInfo.userId}`;
         this.ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => {
                 return r1.uuid !== r2.uuid;
             }
         });
 
-        this.rows = [];
-
         this.state = {
-            dataSource: this.ds.cloneWithRows(this.rows),
             textInputHeight: 40,
             inputValue: ''
         };
-    }
-
-    componentWillMount() {
-        // 监听消息发送
-        socketStore.socket.on('message',  this._handleMessage);
-    }
-
-    componentWillUnmount() {
-        socketStore.socket.off('message', this._handleMessage);
-    }
-
-    _handleMessage = (data) => {
-        if (data.from === this.toInfo.userId) {
-            this.rows.push(data);
-            this.setState({
-                dataSource: this.ds.cloneWithRows(this.rows)
-            });
-        }
     }
 
     _scrollToBottom () {
@@ -108,11 +90,6 @@ export default class ChatRoom extends Component {
             }
         };
 
-        // 本地更新
-        this.rows.push(payload);
-        this.setState({
-            dataSource: this.ds.cloneWithRows(this.rows)
-        });
         this.setState({ inputValue: '' });
 
         // 远程发送
@@ -141,7 +118,7 @@ export default class ChatRoom extends Component {
             >
                 <ListView
                     ref={(reference) => { this.chatListView = reference; }}
-                    dataSource={this.state.dataSource}
+                    dataSource={this.ds.cloneWithRows(socketStore.currentChatRoomHistory.slice())}
                     enableEmptySections={true}
                     onLayout={
                         (event) => {
@@ -302,3 +279,6 @@ const styles = StyleSheet.create({
         height: 40
     }
 });
+
+
+export default ChatRoom;
