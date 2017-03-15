@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 
 import {
+    Color,
     ListItem
 } from '../../UiLibrary';
 
@@ -38,7 +39,6 @@ class FriendList extends React.Component {
             },
             // REVIEW: s1, s2 的返回值不确定，需要再次确认
             sectionHeaderHasChanged: function (s1, s2) {
-                console.log('👁', s1, s2);
                 return s1 !== s2;
             }
         });
@@ -64,7 +64,8 @@ class FriendList extends React.Component {
         return (
             <ListItem.Label
                 icon={row.avatar}
-                labelText={row.name + (row.status === 'online' ? '' : '  (离线)')}
+                labelText={row.name}
+                labelStyle={row.status === 'online' ? styles.online : ''}
                 onPress={()=>{
                     this.props.navigator.push(ChatRoom, row.name, {
                         toInfo: {
@@ -118,6 +119,9 @@ class FriendList extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1
+    },
+    online: {
+        color: Color.WechatGreen
     }
 });
 

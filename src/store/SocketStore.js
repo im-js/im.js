@@ -48,6 +48,7 @@ export default class SocketStore {
 
         this.socket.on('connect', () => {
             this.socketId = this.socket.id;
+            this.socket.emit('connect:success', {});
         });
 
         this.socket.on('message' , (payload) => {
@@ -64,6 +65,17 @@ export default class SocketStore {
         this._pushPayloadToMessageHistory(payload);
     }
 
+    clearUnReadMessageCount(key: String) {
+        let sessionItem = this.sessionListMap.get(key);
+        if (sessionItem) {
+            sessionItem = Object.assign({
+            }, sessionItem, {
+                unReadMessageCount: 0
+            });
+            this.sessionListMap.set(key, sessionItem);
+        }
+    }
+
     // 会话记录
     @computed get sessionList(): Array<Object> {
         return [...this.sessionListMap.values()].sort(function(a, b) {
@@ -72,6 +84,14 @@ export default class SocketStore {
             item.latestTime = moment(item.timestamp).startOf('minute').fromNow();
             return item;
         });
+    }
+
+    @computed get unReadMessageCountTotal(): number {
+        let unReadMessageCountTotal = 0;
+        [...this.sessionListMap.values()].forEach(function (item) {
+            unReadMessageCountTotal += item.unReadMessageCount;
+        });
+        return unReadMessageCountTotal;
     }
 
     @computed get currentChatRoomHistory(): Array<Object> {
@@ -88,6 +108,8 @@ export default class SocketStore {
                 this.messageHistoryMap.set(this.currentChatKey, []);
                 return this.messageHistoryMap.get(this.currentChatKey);
             }
+        } else {
+            return [];
         }
     }
 
@@ -103,16 +125,19 @@ export default class SocketStore {
         this._saveMessageToLocalStore(key, payload);
     }
 
+    // 格式化会话信息
     _formatPayloadToSessionItem (payload) {
-        let sessionItem;
+        let sessionItem, key = this._getPayloadKey(payload);
+        let preSessionItem = this.sessionListMap.get(key);
         if (payload.localeExt) {
             let toInfo = payload.localeExt.toInfo;
             sessionItem = {
                 avatar: toInfo.avatar,
                 name: toInfo.name,
                 latestMessage: payload.msg.content,
+                unReadMessageCount: 0,
                 timestamp: +(new Date()),
-                key: this._getPayloadKey(payload),
+                key: key,
                 toInfo: toInfo
             };
         } else {
@@ -122,7 +147,8 @@ export default class SocketStore {
                 name: ext.name,
                 latestMessage: payload.msg.content,
                 timestamp: ext.timestamp,
-                key: this._getPayloadKey(payload),
+                unReadMessageCount: preSessionItem ? preSessionItem.unReadMessageCount + 1 : 1,
+                key: key,
                 toInfo: {
                     userId: payload.from,
                     avatar: ext.avatar,
@@ -168,11 +194,12 @@ export default class SocketStore {
 
     /**
      * 从历史恢复消息
+     * 每次取的数目还不能超过 13 条，不然由于 listView 懒加载，无法滚动到底部
      */
     _restoreMessageFromLocalStore = async (key) => {
         let history = await AsyncStorage.getItem(`message:history:${key}`);
         if (history) {
-            let historyUUIDs = history.split(',').slice(-30).map( uuid => `message:item:${uuid}`);
+            let historyUUIDs = history.split(',').slice(-13).map( uuid => `message:item:${uuid}`);
             let messageArray = await AsyncStorage.multiGet(historyUUIDs);
 
             this.messageHistoryMap.set(key, messageArray.map(item => {
@@ -205,9 +232,5 @@ export default class SocketStore {
             }
             this.sessionListMap.merge(initArray);
         }
-    }
-
-    _clearLocalStore = async () => {
-        await AsyncStorage.clear();
     }
 }

@@ -25,7 +25,6 @@ export default async function fetchLocal (input: string, init?: Object): Object 
 
         return resultJson;
     } catch (e) {
-        console.error(e);
         Alert.alert('Fetch Error', e);
     }
 }

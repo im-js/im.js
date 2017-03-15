@@ -18,7 +18,7 @@ import {
     Text
 } from 'react-native';
 
-import Badge from './Badge.js';
+import Badge from '../Badge';
 
 export default class Tab extends Component {
     render() {
@@ -61,6 +61,7 @@ export default class Tab extends Component {
 
                     <Badge
                         unReadMessageCount={badge}
+                        autoMarginRight={true}
                         style={styles.badge}
                     />
                 </View>

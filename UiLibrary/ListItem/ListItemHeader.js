@@ -22,12 +22,17 @@ export default class List extends React.Component {
         title: PropTypes.string
     };
 
+    let
+
     render() {
         let { title } = this.props;
 
         return (
             <View
-                style={styles.container}
+                style={[
+                    styles.container,
+                    title ? null : styles.height20
+                ]}
             >
                 <Text
                     style={styles.textStyle}
@@ -49,5 +54,8 @@ const styles = StyleSheet.create({
     textStyle: {
         color: Color.LightBlack,
         fontSize: FontSize.Annotation
+    },
+    height20: {
+        height: 20
     }
 });

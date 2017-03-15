@@ -22,11 +22,13 @@ import {
 
 import {
     FontSize,
-    Color
+    Color,
+    Badge,
+    ListItem
 } from '../../UiLibrary';
 
 import {
-    socketStore
+    socketStore,
 } from '../storeSingleton.js';
 
 import ChatRoom from './ChatRoom.js';
@@ -50,6 +52,7 @@ class SessionList extends React.Component {
         return (
             <ConversationCell
                 avatar={row.avatar}
+                unReadMessageCount={row.unReadMessageCount}
                 name={row.name}
                 latestTime={row.latestTime}
                 latestMessage={row.latestMessage}
@@ -66,6 +69,15 @@ class SessionList extends React.Component {
         );
     }
 
+    _renderSeparator(sectionID: number, rowID: number, adjacentRowHighlighted: bool) {
+        return (
+            <ListItem.Separator
+                paddingLeft={10}
+                key={`${sectionID}-${rowID}`}
+            />
+        );
+    }
+
     render() {
         if (socketStore.sessionList.length) {
             return (
@@ -73,6 +85,7 @@ class SessionList extends React.Component {
                     <ListView
                         dataSource={this.ds.cloneWithRows(socketStore.sessionList)}
                         enableEmptySections={true}
+                        renderSeparator={this._renderSeparator}
                         renderRow={this._renderRow}
                     />
                 </View>
@@ -97,7 +110,6 @@ class SessionList extends React.Component {
     }
 }
 
-
 class ConversationCell extends React.Component {
     static propTypes = {
         avatar: PropTypes.string.isRequired,
@@ -112,7 +124,7 @@ class ConversationCell extends React.Component {
     }
 
     render() {
-        let { avatar, name, latestTime, latestMessage, onPress } = this.props;
+        let { avatar, unReadMessageCount, name, latestTime, latestMessage, onPress } = this.props;
 
         return (
             <TouchableHighlight
@@ -121,25 +133,39 @@ class ConversationCell extends React.Component {
                 <View
                     style={styles.ConversationCell}
                 >
-                    <Image
-                        source={{
-                            uri: avatar
-                        }}
-                        style={styles.avatar}
-                    />
+                    <View
+                        style={styles.leftBox}
+                    >
+                        <Image
+                            source={{
+                                uri: avatar
+                            }}
+                            style={styles.avatar}
+                        />
+
+                        <Badge
+                            style={styles.cellBadge}
+                            unReadMessageCount={unReadMessageCount}
+                            height={18}
+                        />
+                    </View>
                     <View
                         style={styles.boxRight}
                     >
                         <View
                             style={styles.boxCeil}
                         >
-                            <Text>{name}</Text>
+                            <Text
+                                style={styles.sessionName}
+                                numberOfLines={1}
+                            >{name}</Text>
                             <Text
                                 style={styles.latestTime}
                             >{latestTime}</Text>
                         </View>
                         <Text
                             style={styles.boxFloor}
+                            numberOfLines={1}
                         >{latestMessage}</Text>
                     </View>
                 </View>
@@ -153,36 +179,45 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-start',
         alignItems: 'stretch',
-        backgroundColor: '#E6E6E6'
+        backgroundColor: Color.BackgroundGrey
     },
     ConversationCell: {
         flexDirection: 'row',
-        backgroundColor: '#fff',
-        borderBottomColor: '#bbb',
-        borderBottomWidth: StyleSheet.hairlineWidth
+        backgroundColor: Color.White
+    },
+    leftBox: {
+        padding: 6
+    },
+    avatar: {
+        borderRadius: 4,
+        width: 50,
+        height: 50
+    },
+    cellBadge: {
+        position: 'absolute',
+        top: 2,
+        right: 0
     },
     boxRight: {
         flex: 1,
-        padding: 6
+        padding: 10
     },
     boxCeil: {
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
+    sessionName: {
+        fontSize: FontSize.Content,
+        color: Color.Black
+    },
     boxFloor: {
-        fontSize: 14,
+        fontSize: FontSize.Annotation,
         color: '#9A9A9A'
     },
     latestTime: {
-        fontSize: 12,
+        fontSize: FontSize.Annotation,
         color: '#B3B3B3'
-    },
-    avatar: {
-        borderRadius: 4,
-        margin: 5,
-        width: 40,
-        height: 40
     },
     emptyMessage: {
         flex: 1,

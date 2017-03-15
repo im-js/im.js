@@ -8,6 +8,8 @@
  *
  * 首页 TabBar
  */
+
+import { observer } from 'mobx-react/native';
 import React from 'react';
 import {
     TabBar
@@ -17,6 +19,11 @@ import SessionList from './SessionList.js';
 import FriendList from './FriendList.js';
 import My from './My.js';
 
+import {
+    socketStore
+} from '../storeSingleton.js';
+
+@observer
 class TabBarIndex extends React.Component {
     static NavigationTitle = '会话';
 
@@ -33,6 +40,7 @@ class TabBarIndex extends React.Component {
                     tintColor="#1EA114"
                     icon="http://image-2.plusman.cn/app/im-client/message.png"
                     tintIcon="http://image-2.plusman.cn/app/im-client/message-reverse.png"
+                    badge={socketStore.unReadMessageCountTotal}
                     onPress={() => {
                         this.props.navigator.setNavigationTitle('会话');
                     }}

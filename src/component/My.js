@@ -32,9 +32,10 @@ import {
 } from '../storeSingleton.js';
 
 import Profile from './Profile.js';
+import Setting from './Setting.js';
 
 @observer
-class Setting extends Component {
+class My extends Component {
     constructor(props: Object) {
         super(props);
     }
@@ -87,26 +88,12 @@ class Setting extends Component {
 
                 <ListItem.Label
                     onPress={() => {
-                        socketStore._saveDataToLocalStore();
+                        this.props.navigator.push(Setting, '设置');
                     }}
-                    labelText="保存"
+                    icon="http://image-2.plusman.cn/app/im-client/blue-settings.png!icon3x"
+                    labelText="设置"
                 />
                 <ListItem.Separator/>
-
-                <ListItem.Label
-                    onPress={() => {
-                        socketStore._restoreDataFromLocalStore();
-                    }}
-                    labelText="恢复"
-                />
-                <ListItem.Separator/>
-
-                <ListItem.Label
-                    onPress={() => {
-                        socketStore._clearLocalStore();
-                    }}
-                    labelText="清空缓存"
-                />
             </ScrollView>
         );
     }
@@ -153,4 +140,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Setting;
+export default My;

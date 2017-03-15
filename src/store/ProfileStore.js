@@ -14,7 +14,8 @@ import config from '../config.js';
 import fetchLocal from '../util/fetchLocal.js';
 
 import {
-    AsyncStorage
+    AsyncStorage,
+    Vibration
 } from 'react-native';
 
 class ProfileStore {
@@ -37,6 +38,13 @@ class ProfileStore {
 
         // socket 信息跟踪
         autorun(this.updateSocketInfo);
+
+        // 是否震动
+        this.socket.socket.on('message', () => {
+            if (this.userInfo.vibration) {
+                Vibration.vibrate();
+            }
+        });
     }
 
     // 从本地缓存恢复用户信息
@@ -100,7 +108,7 @@ class ProfileStore {
             method: 'delete',
         });
         if (result.success) {
-            await AsyncStorage.removeItem(this.STORAGE_KEY_USER_INFO);
+            await AsyncStorage.clear();
             // 清空 userInfo
             this.userInfo = null;
         }

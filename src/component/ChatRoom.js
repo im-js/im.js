@@ -42,13 +42,13 @@ class ChatRoom extends Component {
     ds: Object;
     rows: Object[];
     state: Object;
+    currentMaxRowId: number = 0;
     chatListView: Object;
 
     constructor(props: Object) {
         super(props);
         this.toInfo = props.toInfo;
         this.firstEnter = 0;
-        socketStore.currentChatKey  = `${profileStore.userInfo.userId}-${this.toInfo.userId}`;
         this.ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => {
                 return r1.uuid !== r2.uuid;
@@ -61,15 +61,30 @@ class ChatRoom extends Component {
         };
     }
 
+    componentWillUnmount() {
+        socketStore.clearUnReadMessageCount(socketStore.currentChatKey);
+        socketStore.currentChatKey = null;
+    }
+
+    // 不要和动画效果抢系统资源
+    componentDidMount() {
+        socketStore.currentChatKey  = `${profileStore.userInfo.userId}-${this.toInfo.userId}`;
+    }
+
     _scrollToBottom () {
         let scrollProperties = this.chatListView.scrollProperties;
         // 如果组件没有挂载完全，则不进行内容偏移
         if (!scrollProperties.visibleLength) { return; }
 
+        // 如果组件内元素还没渲染完全，则不进行偏移
+        if (socketStore.currentChatRoomHistory.length !== (this.currentMaxRowId + 1)){
+            return;
+        }
+
         let offsetY = scrollProperties.contentLength - scrollProperties.visibleLength;
         this.chatListView.scrollTo({
             y: offsetY > 0 ? offsetY : 0,
-            animated: !(++this.firstEnter < 3)
+            animated: !(this.firstEnter++ < 5)
         });
     }
 
@@ -102,7 +117,8 @@ class ChatRoom extends Component {
         }, payload));
     }
 
-    _renderRow(row) {
+    _renderRow = (row, sectionID, rowId) => {
+        this.currentMaxRowId = +rowId;
         return (
             <MessageCell
                 currentUser={profileStore.userInfo.userId}
