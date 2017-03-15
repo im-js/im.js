@@ -7,6 +7,7 @@
 ## 组件列表
 * [TabBar](./TabBar) - 底部 Tab 导航组件
 * [Navigator](./Navigator) - 顶部导航视图
+* [Badge]('./Badge') - 徽章组件
 * [Button](./Button) - 按钮组
 * [TextInput](./TextInput) - 输入框组
 * [ListItem](./ListItem) - ListItem 样式组

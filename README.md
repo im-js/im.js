@@ -1,5 +1,5 @@
 # react-native-wechat
->一个基于 react-native + socket.io + node 的仿微信 JS-IM
+>一个基于 react-native + mobx + socket.io + node 的仿微信 JS-IM
 
 ## 示例
 
