@@ -19,7 +19,7 @@ react-native run-android
 ```
 
 ## im-server
-> 基于 socket.io + koa2 + cloverx(自用 RestuFul 框架)
+> 基于 socket.io + koa2 + [cloverx](https://github.com/clover-x/cloverx)(自用 RestuFul 框架)
 
 im 服务端项目地址：[im-server](https://github.com/plusmancn/im-server)
 
