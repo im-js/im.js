@@ -42,10 +42,12 @@ im 服务端项目地址：[im-server](https://github.com/plusmancn/im-server)
 
 **计划中**  
 
-- [x] 应用内离线消息
+- [ ] 应用内离线消息，基于 `Reids` 实现。
+- [ ] 消息 `payload` 传输时使用 `protobuf` 序列化
 - [ ] 当 `rn-0.43` 发布的时候，使用 `FlatList` 和 `SectionList` 替换 `ListView`
 - [ ] `ListView` 替换完成后，进行群聊开发
 - [ ] 公众号菜单以及对应后台 `Dashboard` 开发
+- [ ] 服务器 https 化
 
 **或许会做**  
 
