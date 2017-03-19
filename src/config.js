@@ -16,7 +16,8 @@ const config = {
     'dev': {
         // server: 'http://172.16.8.202:7078'
         // server: 'http://192.168.101.12:7078'
-        server: 'http://im-server.plusman.cn:7078'
+        // server: 'http://192.168.31.114:7078'
+        server: 'http://im-server.plusman.cn'
     }
 };
 

@@ -61,6 +61,11 @@ class ProfileStore {
         if (this.userInfo && this.socket.socketId) {
             if (this.socket.socketId !== this.userInfo.socketId) {
                 await this.modifyUserInfo('socketId', this.socket.socketId);
+
+                // 发送用户上线信息
+                this.socket.socket.emit('user:online', {
+                    userId: this.userInfo.userId
+                });
             }
         }
     }

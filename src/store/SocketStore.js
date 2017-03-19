@@ -48,21 +48,26 @@ export default class SocketStore {
 
         this.socket.on('connect', () => {
             this.socketId = this.socket.id;
-            this.socket.emit('connect:success', {});
         });
 
-        this.socket.on('message' , (payload) => {
-            let sessionItem = this._formatPayloadToSessionItem(payload);
+        // 远程消息入口，可能会有队列堆积，所以此处是个 Array
+        this.socket.on('message' , (payloads: Array<Object>) => {
+            console.log(payloads ,'arrive');
+            // 取数组最新一条消息，并格式化为
+            let sessionItem = this._formatPayloadToSessionItem(payloads[payloads.length - 1], payloads.length);
             this.sessionListMap.set(String(sessionItem.key), sessionItem);
-            this._pushPayloadToMessageHistory(payload);
+            // 需要支持 payload 数组
+            this._pushPayloadToMessageHistory(sessionItem.key, payloads);
         });
     }
 
-    // 本地 payload 推入
+    // 本地消息入口，本地 payload 推入，只有单条推入
     pushLocalePayload(payload: Object) {
+        // sessionItem
         let sessionItem = this._formatPayloadToSessionItem(payload);
         this.sessionListMap.set(String(sessionItem.key), sessionItem);
-        this._pushPayloadToMessageHistory(payload);
+        // history
+        this._pushPayloadToMessageHistory(sessionItem.key, [payload]);
     }
 
     clearUnReadMessageCount(key: String) {
@@ -113,20 +118,25 @@ export default class SocketStore {
         }
     }
 
-    _pushPayloadToMessageHistory(payload) {
-        let key = this._getPayloadKey(payload);
-        payload = _.omit(payload, ['localeExt']);
+    _pushPayloadToMessageHistory(key, payloads: Array<Object>) {
+        payloads = payloads.map((payload) => {
+            return _.omit(payload, ['localeExt']);
+        });
+
         if (this.messageHistoryMap.has(key)) {
-            this.messageHistoryMap.get(key).push(payload);
+            this.messageHistoryMap.get(key).push(...payloads);
         } else {
-            this.messageHistoryMap.set(key, [payload]);
+            this.messageHistoryMap.set(key, payloads);
         }
 
-        this._saveMessageToLocalStore(key, payload);
+        this._saveMessageToLocalStore(key, payloads);
     }
 
-    // 格式化会话信息
-    _formatPayloadToSessionItem (payload) {
+    /**
+     * 格式化 payload
+     * @param {Number} delta - 未读数步进
+     */
+    _formatPayloadToSessionItem (payload, delta: number = 1) {
         let sessionItem, key = this._getPayloadKey(payload);
         let preSessionItem = this.sessionListMap.get(key);
         if (payload.localeExt) {
@@ -147,7 +157,7 @@ export default class SocketStore {
                 name: ext.name,
                 latestMessage: payload.msg.content,
                 timestamp: ext.timestamp,
-                unReadMessageCount: preSessionItem ? preSessionItem.unReadMessageCount + 1 : 1,
+                unReadMessageCount: preSessionItem ? preSessionItem.unReadMessageCount + delta : delta,
                 key: key,
                 toInfo: {
                     userId: payload.from,
@@ -185,11 +195,19 @@ export default class SocketStore {
      * message:history:${key} 存储用户的消息 id 集合
      * message:item:${uuid} 消息 uuid 集合
      */
-    _saveMessageToLocalStore = async (key, payload) => {
+    _saveMessageToLocalStore = async (key, payloads: Array<Object>) => {
         let historyKey = `message:history:${key}`;
         let history = await AsyncStorage.getItem(historyKey);
-        await AsyncStorage.setItem(historyKey, `${history ? history + ',' : '' }${payload.uuid}`);
-        await AsyncStorage.setItem(`message:item:${payload.uuid}`, JSON.stringify(payload));
+
+        // 聊天记录索引
+        let uuids = payloads.map((payload) => {
+            return payload.uuid;
+        });
+        await AsyncStorage.setItem(historyKey, `${history ? history + ',' : '' }${uuids.join(',')}`);
+
+        payloads.forEach((payload) => {
+            AsyncStorage.setItem(`message:item:${payload.uuid}`, JSON.stringify(payload));
+        });
     }
 
     /**

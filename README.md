@@ -42,7 +42,7 @@ im 服务端项目地址：[im-server](https://github.com/plusmancn/im-server)
 
 **计划中**  
 
-- [ ] 应用内离线消息，基于 `Reids` 实现。
+- [x] 应用内离线消息，基于 `Reids` 实现。
 - [ ] 消息 `payload` 传输时使用 `protobuf` 序列化
 - [ ] 当 `rn-0.43` 发布的时候，使用 `FlatList` 和 `SectionList` 替换 `ListView`
 - [ ] `ListView` 替换完成后，进行群聊开发
@@ -53,3 +53,6 @@ im 服务端项目地址：[im-server](https://github.com/plusmancn/im-server)
 
 - [ ] 集成微信登录
 - [ ] 集成一个第三方推送服务
+
+**Bug 列表**
+- [] 会话列表，消息如果以 `\n` 结尾，会造成多行问题。
