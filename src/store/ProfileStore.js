@@ -108,12 +108,13 @@ class ProfileStore {
     }
 
     // 用户登出
-    async logout(userId: string) {
+    async logout (userId: string) {
         let result = await fetchLocal(config.server + `/v1/user/${userId}/status`, {
             method: 'delete',
         });
+
         if (result.success) {
-            await AsyncStorage.clear();
+            await this.socket.clear();
             // 清空 userInfo
             this.userInfo = null;
         }

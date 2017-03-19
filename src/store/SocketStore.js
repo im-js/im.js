@@ -52,7 +52,6 @@ export default class SocketStore {
 
         // 远程消息入口，可能会有队列堆积，所以此处是个 Array
         this.socket.on('message' , (payloads: Array<Object>) => {
-            console.log(payloads ,'arrive');
             // 取数组最新一条消息，并格式化为
             let sessionItem = this._formatPayloadToSessionItem(payloads[payloads.length - 1], payloads.length);
             this.sessionListMap.set(String(sessionItem.key), sessionItem);
@@ -79,6 +78,11 @@ export default class SocketStore {
             });
             this.sessionListMap.set(key, sessionItem);
         }
+    }
+
+    clear = async () => {
+        await AsyncStorage.clear();
+        this.sessionListMap.clear();
     }
 
     // 会话记录
@@ -181,12 +185,19 @@ export default class SocketStore {
 
 
     _handleAppStateChange = (appState) => {
+        console.log(appState);
         if (Platform.OS === 'ios' && appState === 'inactive' ) {
+            this.socket.close();
             this._saveDataToLocalStore();
         }
 
         if (Platform.OS === 'android' && appState === 'background') {
+            this.socket.close();
             this._saveDataToLocalStore();
+        }
+
+        if (appState === 'active') {
+            this.socket.open();
         }
     }
 
