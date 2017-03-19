@@ -1,4 +1,4 @@
-# react-native-wechat
+# im.js
 >一个基于 react-native + mobx + socket.io + node 的仿微信 JS-IM
 
 ## 示例
@@ -21,14 +21,14 @@ react-native run-android
 ## im-server
 > 基于 socket.io + koa2 + [cloverx](https://github.com/clover-x/cloverx)(自用 RestuFul 框架)
 
-im 服务端项目地址：[im-server](https://github.com/plusmancn/im-server)
+im 服务端项目地址：[im-server](https://github.com/plusmancn/im.js.server)
 
 服务端用到了 [cloverx-doc](https://github.com/clover-x/cloverx-doc) 来生成 `Swagger` 在线调试文档，[cloverx-doc](https://github.com/clover-x/cloverx-doc) 还自带了一个输出格式化器，用来保证 `Api` 接口输出的一致性，纯手撸的，有兴趣可以看下。
 
 ## 组件库
 > 开发本项目的时候，要求自己尽量手写基础组件，基础组件与业务无关，可通用
 
-组件库地址：[UiLibrary](https://github.com/plusmancn/im-client/blob/master/UiLibrary/README.md)
+组件库地址：[UiLibrary](https://github.com/plusmancn/im.js/blob/master/UiLibrary/README.md)
 
 
 ## 组件调试
