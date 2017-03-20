@@ -1,22 +1,32 @@
-# im.js
+# Im.JS
 ![im-js-logo](./doc/asset/im-js-logo@240.png)
->一个基于 react-native + mobx + socket.io + node 的仿微信 JS-Wechat。
+>一个基于 react-native + mobx + socket.io + node 的仿微信 JS-Wechat。  
+项目主页 [Github-Im.JS](https://github.com/im-js/im.js)
 
-## 示例
+## 效果图
+**iOS Gif**  
+
+
+**Android 请直接扫码下载体验**  
+
+![安卓下载二维码](./doc/asset/Im.JS-v1.1.0.apk.png)
 
 ## 运行项目
 > react-native 在 debug 和 release 模式之间的性能差距是惊人的。
 
-安装依赖
+**安装依赖**  
 ```shell
 npm install
 ```
-进入开发模式
+**进入开发模式**  
 ```shell
 react-native run-ios
 // or
 react-native run-android
 ```
+**Release 包生成**  
+[Running On Device](http://facebook.github.io/react-native/docs/running-on-device.html)  
+[Generating Signed APK](http://facebook.github.io/react-native/docs/signed-apk-android.html)
 
 ## [im.js-server](https://github.com/im-js/im.js-server)
 > 基于 socket.io + koa2 + [cloverx](https://github.com/clover-x/cloverx)(自用 RestuFul 框架)
@@ -34,7 +44,10 @@ react-native run-android
 通过更改 app.json 的 appMode 字段，进行组件调试模式（UiLibrary）和 Im 模式（ImClient）的切换
 
 ## 开发笔记
-> 详细记录了开发过程中的思考 [点击进入博客](https://github.com/plusmancn/plusmancn.github.com)  
+<ul>
+  <li><a href="https://github.com/plusmancn/plusmancn.github.com/blob/master/2017/B3-rn-navigator-model-2.md">《从零开始搭建一个多端 IM》贰：页面导航模式设计- Navigator 导航</a></li>
+  <li><a href="https://github.com/plusmancn/plusmancn.github.com/blob/master/2017/B2-rn-navigator-model-1.md">《从零开始搭建一个多端 IM》壹：页面导航模式设计- TabBar 导航栏</a></li>
+</ul>
 
 ## TODO
 
@@ -45,14 +58,14 @@ react-native run-android
 - [ ] `Ack` 消息触达、已读等状态回调。
 - [ ] `ListView` 替换完成后，进行群聊开发
 - [ ] 公众号菜单以及对应后台 `Dashboard` 开发
-- [ ] 服务器 https 化
+- [ ] 服务器升级为 `https` 和 `wss`
 
 **或许会做**  
 
 - [ ] 集成微信登录
 - [ ] 集成一个第三方推送服务
 
-**Bug 列表**
+**已知 Bug 列表**
 - [ ] `rn` 的 `Text` 控件，即使指定 `numberOfLines={1}`，消息如果以 `\n` 结尾，也会造成显示成 2 行。
 
 

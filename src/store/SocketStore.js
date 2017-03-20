@@ -183,9 +183,7 @@ export default class SocketStore {
         }
     }
 
-
     _handleAppStateChange = (appState) => {
-        console.log(appState);
         if (Platform.OS === 'ios' && appState === 'inactive' ) {
             this.socket.close();
             this._saveDataToLocalStore();
