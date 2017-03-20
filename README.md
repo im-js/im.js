@@ -29,13 +29,10 @@ im 服务端项目地址：[im.js.server](https://github.com/plusmancn/im.js.ser
 
 组件库地址：[UiLibrary](https://github.com/plusmancn/im.js/blob/master/UiLibrary/README.md)
 
-
-## 组件调试
-通过更改 `app.json` 的 `appMode` 字段，进行组件调试模式（`UiLibrary`）和 Im 模式（`ImClient`）的切换。  
+通过更改 app.json 的 appMode 字段，进行组件调试模式（UiLibrary）和 Im 模式（ImClient）的切换
 
 ## 开发笔记
 > 详细记录了开发过程中的思考 [点击进入博客](https://github.com/plusmancn/plusmancn.github.com)  
-
 
 ## TODO
 
@@ -44,6 +41,7 @@ im 服务端项目地址：[im.js.server](https://github.com/plusmancn/im.js.ser
 - [x] 应用内离线消息，基于 `Reids` 实现。
 - [ ] 当 `rn-0.43` 发布的时候，使用 `FlatList` 和 `SectionList` 替换 `ListView`
 - [ ] `ListView` 替换完成后，进行群聊开发
+- [ ] `Ack` 消息触达、已读等状态回调。
 - [ ] 公众号菜单以及对应后台 `Dashboard` 开发
 - [ ] 服务器 https 化
 
@@ -163,3 +161,8 @@ user-status    | offline    | offline  | online
 当用户上线时候，客户端向服务器发送 `user:online` 事件，服务器以数组的形式返回对应用户的离线消息，并清空离线缓存。
 
 ## ACK 处理
+[socket.emit(eventName[, ...args][, ack])](https://github.com/socketio/socket.io-client/blob/master/docs/API.md#socketemiteventname-args-ack) 提供了 `Ack` 回调。
+
+此处 `Ack` 函数返回的状态，指的是单个 `socket` 连接两端点间消息是否送达成功，不代表对方用户是否收到（因为消息是由服务转发的）。
+
+如果要做消息已读、是否送达等状态，需要在应用层继续做开发。
