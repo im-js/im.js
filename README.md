@@ -18,12 +18,13 @@ react-native run-ios
 react-native run-android
 ```
 
-## im.js.server
+## [im.js.server](https://github.com/plusmancn/im.js.server)
 > 基于 socket.io + koa2 + [cloverx](https://github.com/clover-x/cloverx)(自用 RestuFul 框架)
 
-im 服务端项目地址：[im.js.server](https://github.com/plusmancn/im.js.server)
+服务端用到了 [cloverx-doc](https://github.com/clover-x/cloverx-doc) 从接口注释生成 `Swagger` 在线调试文档，还自带了一个输出格式化器，用来保证 `Api` 接口输出的一致性，纯手撸的，有兴趣可以看下。附一张效果图:  
 
-服务端用到了 [cloverx-doc](https://github.com/clover-x/cloverx-doc) 来生成 `Swagger` 在线调试文档，[cloverx-doc](https://github.com/clover-x/cloverx-doc) 还自带了一个输出格式化器，用来保证 `Api` 接口输出的一致性，纯手撸的，有兴趣可以看下。
+![cloverx-doc-example](./doc/asset/cloverx-doc-example.png)
+
 
 ## 组件库
 > 开发本项目的时候，要求自己尽量手写基础组件，基础组件与业务无关，可通用
