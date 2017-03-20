@@ -108,7 +108,7 @@ class ChatRoom extends Component {
         this.setState({ inputValue: '' });
 
         // 远程发送
-        socketStore.socket.emit('peerMessage', [payload]);
+        socketStore.socket.emit('message', [payload]);
         // 本地会话列表更新
         socketStore.pushLocalePayload(Object.assign({
             localeExt: {

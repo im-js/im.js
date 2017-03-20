@@ -1,8 +1,7 @@
 # im.js
->一个基于 react-native + mobx + socket.io + node 的仿微信 JS-IM
+>一个基于 react-native + mobx + socket.io + node 的仿微信 JS-Wechat。
 
 ## 示例
-
 
 ## 运行项目
 > react-native 在 debug 和 release 模式之间的性能差距是惊人的。
@@ -18,10 +17,10 @@ react-native run-ios
 react-native run-android
 ```
 
-## im-server
+## im.js.server
 > 基于 socket.io + koa2 + [cloverx](https://github.com/clover-x/cloverx)(自用 RestuFul 框架)
 
-im 服务端项目地址：[im-server](https://github.com/plusmancn/im.js.server)
+im 服务端项目地址：[im.js.server](https://github.com/plusmancn/im.js.server)
 
 服务端用到了 [cloverx-doc](https://github.com/clover-x/cloverx-doc) 来生成 `Swagger` 在线调试文档，[cloverx-doc](https://github.com/clover-x/cloverx-doc) 还自带了一个输出格式化器，用来保证 `Api` 接口输出的一致性，纯手撸的，有兴趣可以看下。
 
@@ -56,3 +55,41 @@ im 服务端项目地址：[im-server](https://github.com/plusmancn/im.js.server
 
 **Bug 列表**
 - [ ] 会话列表，消息如果以 `\n` 结尾，会造成多行问题。
+
+
+# 技术文档
+## 消息体格式约定
+**txt**  
+```javascript
+{
+    from: String('用户ID'),
+    to: String('用户ID'),
+    uuid: '消息唯一UUID',
+    msg: {
+        type: 'txt',
+        content: '文本内容',
+    },
+    ext: {
+        avatar: String('用户头像地址'),
+        name: String('用户姓名'),
+        timestamp: timestamp(毫秒), // 可使用 moment().startOf('minute').fromNow() 格式化
+    },
+    // 不参与网络传输，本地传递拓展字段位置
+    localeExt: {
+    }
+}
+```
+
+## 消息 ACK
+
+## 离线消息机制
+基于 `Redis` 实现，单用户离线队列命名规则为 `offline:queue:userId:${userId}`，存储结构为 `Lists`。
+
+当用户上线时候，客户端向服务器发送 `user:online` 事件，服务器以数组的形式返回对应用户的离线消息。
+
+## 用户状态裁决
+AppState 状态与 socket 状态
+
+State      | background | inactive | active
+:----------|:-----------|:---------|:-------
+socket-ios | disconnect | connect  | connect
