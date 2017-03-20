@@ -40,8 +40,8 @@ im 服务端项目地址：[im.js.server](https://github.com/plusmancn/im.js.ser
 
 - [x] 应用内离线消息，基于 `Reids` 实现。
 - [ ] 当 `rn-0.43` 发布的时候，使用 `FlatList` 和 `SectionList` 替换 `ListView`
-- [ ] `ListView` 替换完成后，进行群聊开发
 - [ ] `Ack` 消息触达、已读等状态回调。
+- [ ] `ListView` 替换完成后，进行群聊开发
 - [ ] 公众号菜单以及对应后台 `Dashboard` 开发
 - [ ] 服务器 https 化
 
@@ -51,7 +51,7 @@ im 服务端项目地址：[im.js.server](https://github.com/plusmancn/im.js.ser
 - [ ] 集成一个第三方推送服务
 
 **Bug 列表**
-- [ ] 会话列表，消息如果以 `\n` 结尾，会造成多行问题。
+- [ ] `rn` 的 `Text` 控件，即使指定 `numberOfLines={1}`，消息如果以 `\n` 结尾，也会造成显示成 2 行。
 
 
 # 技术文档
