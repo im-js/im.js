@@ -1,4 +1,5 @@
 # im.js
+![im-js-logo](./doc/asset/im-js-logo@240.png)
 >一个基于 react-native + mobx + socket.io + node 的仿微信 JS-Wechat。
 
 ## 示例
