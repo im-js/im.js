@@ -3,6 +3,12 @@
 >一个基于 react-native + mobx + socket.io + node 的仿微信 JS-Wechat。  
 项目主页 [Github-Im.JS](https://github.com/im-js/im.js)
 
+## 写在前面
+*Why Not JS ?*  
+这是自己作为一个 `JS` 开发者面对来自他人的不确信，常常在内心问起自己的问题？  
+我想不管答案是什么，更重要的是探索深挖的过程，不肤浅，总能有意想不到的收获。
+
+
 ## 效果图
 **iOS Gif**  
 
