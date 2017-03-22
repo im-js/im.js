@@ -22,6 +22,7 @@ import NavigatorDemo from './Navigator/test/index.js';
 import ButtonDemo from './Button/test/index.js';
 import TextInputDemo from './TextInput/test/index.js';
 import ListItemDemo from './ListItem/test/index.js';
+import SwipeoutDemo from './Swipeout/test/index.js';
 
 import {
     Navigator,
@@ -68,10 +69,22 @@ class DemoListView extends Component {
                 {
                     name: 'TextInput',
                     component: TextInputDemo
-                },
+                }
+            ],
+            '列表': [
                 {
                     name: 'ListItem',
                     component: ListItemDemo
+                },
+                {
+                    name: 'Swipeout',
+                    component: SwipeoutDemo
+                }
+            ],
+            '其他': [
+                {
+                    name: 'Badge',
+                    component: TabBarDemo
                 }
             ]
         };
@@ -79,19 +92,12 @@ class DemoListView extends Component {
 
     _renderRow = (row) => {
         return (
-            <TouchableHighlight
+            <ListItem.Label
                 onPress={() => {
                     this.props.navigator.push(row.component);
                 }}
-            >
-                <View
-                    style={styles.listItem}
-                >
-                    <Text
-                        style={styles.listItemText}
-                    >{row.name}</Text>
-                </View>
-            </TouchableHighlight>
+                labelText={row.name}
+            />
         );
     }
 
