@@ -45,6 +45,7 @@ export default class Swipeout extends React.Component {
     _panAnim: Object =  new Animated.Value(0);
 
     // 记录按钮组宽度
+    _buttonsInner: Array<Object> = [];
     _buttonsWidth: number = 0;
 
     constructor(props: Object) {
@@ -52,9 +53,12 @@ export default class Swipeout extends React.Component {
 
         this.state = {};
 
-        this._buttonsWidth =  this.props.rightButtons.reduce((acc, val) => {
-            val.width = val.title.length * DEFAULT_CHARACTER_WIDTH + 2 * DEFAULT_OPTION_PADDING;
-            return acc + val.width;
+        this._buttonsWidth =  this.props.rightButtons.reduce((acc, val, index) => {
+            let width = val.title.length * DEFAULT_CHARACTER_WIDTH + 2 * DEFAULT_OPTION_PADDING;
+            this._buttonsInner[index] = {
+                width: width
+            };
+            return acc + width;
         }, 0);
     }
 
@@ -111,6 +115,7 @@ export default class Swipeout extends React.Component {
             }
         }, panResponderDef));
     }
+
 
     _handlePanStart = (evt, gestureState) => {
         if (this._panValue !== 0) {
@@ -175,7 +180,7 @@ export default class Swipeout extends React.Component {
                 <View
                     style={[
                         {
-                            width: buttonDesc.width
+                            width: this._buttonsInner[index].width
                         },
                         styles.buttonView,
                         styles[`type${buttonDesc.type}`] || null

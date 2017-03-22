@@ -14,6 +14,7 @@ import uuid from 'uuid';
 import React, { Component } from 'react';
 import {
     KeyboardAvoidingView,
+    RefreshControl,
     StyleSheet,
     ListView,
     Image,
@@ -45,6 +46,11 @@ class ChatRoom extends Component {
     currentMaxRowId: number = 0;
     chatListView: Object;
 
+    // 判断用户是否输入过
+    _userHasBeenInputed: boolean = false;
+    _userAtPage = 0;
+    _userReachEnd = true;
+
     constructor(props: Object) {
         super(props);
         this.toInfo = props.toInfo;
@@ -57,7 +63,8 @@ class ChatRoom extends Component {
 
         this.state = {
             textInputHeight: 40,
-            inputValue: ''
+            inputValue: '',
+            refreshing: false
         };
     }
 
@@ -69,26 +76,41 @@ class ChatRoom extends Component {
     // 不要和动画效果抢系统资源
     componentDidMount() {
         socketStore.currentChatKey  = `${profileStore.userInfo.userId}-${this.toInfo.userId}`;
+        socketStore.fillCurrentChatRoomHistory();
     }
 
     _scrollToBottom () {
         let scrollProperties = this.chatListView.scrollProperties;
+
         // 如果组件没有挂载完全，则不进行内容偏移
         if (!scrollProperties.visibleLength) { return; }
 
-        // 如果组件内元素还没渲染完全，则不进行偏移
-        if (socketStore.currentChatRoomHistory.length !== (this.currentMaxRowId + 1)){
+        // 如果是刷新操作，则不进行滑动
+        if (!this._userReachEnd) {
             return;
         }
 
-        let offsetY = scrollProperties.contentLength - scrollProperties.visibleLength;
-        this.chatListView.scrollTo({
-            y: offsetY > 0 ? offsetY : 0,
-            animated: !(this.firstEnter++ < 5)
-        });
+        // 如果组件内元素还没渲染完全，则不进行底部偏移
+        if (socketStore.currentChatRoomHistory.length - this.currentMaxRowId > 11) {
+            return;
+        }
+
+        // 这里是一个大坑，在测试环境的时候，由于运行速度较慢，scrollProperties.contentLength 总能
+        // 获取到正确的值，生产环境需要加个延时，用来保证 `renderRow` 执行完毕
+        // 这里设置了 200ms 的延时
+        setTimeout( () => {
+            let offsetY = scrollProperties.contentLength - scrollProperties.visibleLength;
+            if (offsetY > 0) {
+                this.chatListView.scrollTo({
+                    y: offsetY > 0 ? offsetY  : 0,
+                    animated: this._userHasBeenInputed
+                });
+            }
+        }, 200);
     }
 
     _onSubmitEditing = () => {
+        this._userHasBeenInputed = true;
         // 数据组装
         let { userInfo } = profileStore;
         let payload = {
@@ -109,6 +131,7 @@ class ChatRoom extends Component {
 
         // 远程发送
         socketStore.socket.emit('message', [payload]);
+
         // 本地会话列表更新
         socketStore.pushLocalePayload(Object.assign({
             localeExt: {
@@ -121,10 +144,26 @@ class ChatRoom extends Component {
         this.currentMaxRowId = +rowId;
         return (
             <MessageCell
+                key={`cell-${rowId}`}
                 currentUser={profileStore.userInfo.userId}
                 message={row}
             />
         );
+    }
+
+    _onPullMessage = async () => {
+        this._userReachEnd = false;
+
+        this.setState({
+            refreshing: true
+        });
+
+        // 历史消息推入
+        await socketStore.fillCurrentChatRoomHistory(++this._userAtPage, 8);
+
+        this.setState({
+            refreshing: false
+        });
     }
 
     render() {
@@ -133,6 +172,16 @@ class ChatRoom extends Component {
                 style={styles.container}
             >
                 <ListView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.refreshing}
+                            onRefresh={this._onPullMessage}
+                        />
+                    }
+                    onEndReached={() => {
+                        this._userReachEnd = true;
+                    }}
+                    onEndReachedThreshold={10}
                     ref={(reference) => { this.chatListView = reference; }}
                     dataSource={this.ds.cloneWithRows(socketStore.currentChatRoomHistory.slice())}
                     enableEmptySections={true}
@@ -220,7 +269,9 @@ class MessageCell extends Component {
         }
 
         return (
-            <View style={[styles.messageCell, {flexDirection: differentStyle.flexDirection}]}>
+            <View
+                style={[styles.messageCell, {flexDirection: differentStyle.flexDirection}]}
+            >
                 <Image
                     source={{
                         uri: message.ext.avatar
@@ -284,6 +335,7 @@ const styles = StyleSheet.create({
     contentView: {
         borderRadius: 4,
         padding: 4,
+        paddingHorizontal: 8,
         overflow: 'hidden',
         flex: 1,
         margin: 5,

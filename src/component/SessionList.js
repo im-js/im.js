@@ -22,6 +22,7 @@ import {
 
 import {
     FontSize,
+    Swipeout,
     Color,
     Badge,
     ListItem
@@ -43,29 +44,40 @@ class SessionList extends React.Component {
 
         this.ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => {
-                return r1.userId !== r2.userId;
+                return r1.key !== r2.key;
             }
         });
     }
 
     _renderRow = (row) => {
         return (
-            <ConversationCell
-                avatar={row.avatar}
-                unReadMessageCount={row.unReadMessageCount}
-                name={row.name}
-                latestTime={row.latestTime}
-                latestMessage={row.latestMessage}
-                onPress={() => {
-                    this.props.navigator.push(
-                        ChatRoom,
-                        row.name,
-                        {
-                            toInfo: row.toInfo
-                        }
-                    );
-                }}
-            />
+            <Swipeout
+                key={row.key}
+                rightButtons={[{
+                    title: '删除',
+                    type: 'Delete',
+                    onPress: () => {
+                        socketStore.deleteSession(row.key);
+                    }
+                }]}
+            >
+                <ConversationCell
+                    avatar={row.avatar}
+                    unReadMessageCount={row.unReadMessageCount}
+                    name={row.name}
+                    latestTime={row.latestTime}
+                    latestMessage={row.latestMessage}
+                    onPress={() => {
+                        this.props.navigator.push(
+                            ChatRoom,
+                            row.name,
+                            {
+                                toInfo: row.toInfo
+                            }
+                        );
+                    }}
+                />
+            </Swipeout>
         );
     }
 

@@ -27,12 +27,11 @@ export default class SocketStore {
     // 监听对象
     @observable socketId = null;
     @observable currentChatKey = null;
+    @observable currentChatRoomHistory = [];
     sessionListMap = observable.map();
-    messageHistoryMap = observable.map();
+
     // 非监听对象
     socket: Object;
-    // 哪些会话的聊天记录已经从缓存中恢复过
-    _messageHistoryHasResotred = new Set();
 
     constructor() {
         // App 状态监控
@@ -80,6 +79,29 @@ export default class SocketStore {
         }
     }
 
+    // 聊天室相关方法
+    fillCurrentChatRoomHistory = async (page = 0, pageSize = 12) => {
+        if (this.currentChatKey) {
+            let results;
+            if (typeof page === 'number' && page === 0) {
+                // 异步更新
+                results = await this._restoreMessageFromLocalStore(this.currentChatKey, page, pageSize);
+                this.currentChatRoomHistory = results;
+            } else {
+                results = await this._restoreMessageFromLocalStore(this.currentChatKey, page, pageSize);
+                this.currentChatRoomHistory = results.concat(...this.currentChatRoomHistory);
+            }
+            return results.length;
+        }
+
+        return 0;
+    }
+
+    // 删除会话记录
+    deleteSession(key: String) {
+        this.sessionListMap.delete(key);
+    }
+
     clear = async () => {
         await AsyncStorage.clear();
         this.sessionListMap.clear();
@@ -103,37 +125,17 @@ export default class SocketStore {
         return unReadMessageCountTotal;
     }
 
-    @computed get currentChatRoomHistory(): Array<Object> {
-        if (this.currentChatKey) {
-            // 异步更新
-            if (!this._messageHistoryHasResotred.has(this.currentChatKey)) {
-                this._restoreMessageFromLocalStore(this.currentChatKey);
-                this._messageHistoryHasResotred.add(this.currentChatKey);
-            }
-
-            if (this.messageHistoryMap.has(this.currentChatKey)) {
-                return this.messageHistoryMap.get(this.currentChatKey);
-            } else {
-                this.messageHistoryMap.set(this.currentChatKey, []);
-                return this.messageHistoryMap.get(this.currentChatKey);
-            }
-        } else {
-            return [];
-        }
-    }
-
     _pushPayloadToMessageHistory(key, payloads: Array<Object>) {
         payloads = payloads.map((payload) => {
             return _.omit(payload, ['localeExt']);
         });
 
-        if (this.messageHistoryMap.has(key)) {
-            this.messageHistoryMap.get(key).push(...payloads);
-        } else {
-            this.messageHistoryMap.set(key, payloads);
-        }
-
         this._saveMessageToLocalStore(key, payloads);
+
+        // 如果是当前聊天窗，则推入聊天消息
+        if (key === this.currentChatKey) {
+            this.currentChatRoomHistory = [...this.currentChatRoomHistory].concat(payloads);
+        }
     }
 
     /**
@@ -223,15 +225,17 @@ export default class SocketStore {
      * 从历史恢复消息
      * 每次取的数目还不能超过 13 条，不然由于 listView 懒加载，无法滚动到底部
      */
-    _restoreMessageFromLocalStore = async (key) => {
+    _restoreMessageFromLocalStore = async (key, page = 0, pageSize) => {
         let history = await AsyncStorage.getItem(`message:history:${key}`);
-        if (history) {
-            let historyUUIDs = history.split(',').slice(-13).map( uuid => `message:item:${uuid}`);
-            let messageArray = await AsyncStorage.multiGet(historyUUIDs);
 
-            this.messageHistoryMap.set(key, messageArray.map(item => {
+        if (history) {
+            let historyUUIDs = history.split(',').slice(-(pageSize * (page + 1)), -(pageSize * page) || undefined ).map( uuid => `message:item:${uuid}`);
+            let messageArray = await AsyncStorage.multiGet(historyUUIDs);
+            return messageArray.map((item) => {
                 return JSON.parse(item[1]);
-            }));
+            });
+        } else {
+            return [];
         }
     }
 

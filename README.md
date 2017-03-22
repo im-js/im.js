@@ -60,9 +60,10 @@ react-native run-android
 **计划中**  
 
 - [x] 应用内离线消息，基于 `Reids` 实现。
-- [ ] 当 `rn-0.43` 发布的时候，使用 `FlatList` 和 `SectionList` 替换 `ListView`
+- [ ] **Important** 聊天室重构，使用 `FlatList` 和 `SectionList` 替换 `ListView`
+- [ ] **Important** 优化加载历史消息体验
 - [ ] `Ack` 消息触达、已读等状态回调。
-- [ ] `ListView` 替换完成后，进行群聊开发
+- [ ] 添加群聊支持
 - [ ] 公众号菜单以及对应后台 `Dashboard` 开发
 - [ ] 服务器升级为 `https` 和 `wss`
 
