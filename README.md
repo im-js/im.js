@@ -47,10 +47,8 @@ react-native run-android
 通过更改 app.json 的 appMode 字段，进行组件调试模式（UiLibrary）和 Im 模式（ImClient）的切换
 
 ## 开发笔记
-<ul>
-  <li><a href="https://github.com/plusmancn/plusmancn.github.com/blob/master/2017/B3-rn-navigator-model-2.md">《从零开始搭建一个多端 IM》贰：页面导航模式设计- Navigator 导航</a></li>
-  <li><a href="https://github.com/plusmancn/plusmancn.github.com/blob/master/2017/B2-rn-navigator-model-1.md">《从零开始搭建一个多端 IM》壹：页面导航模式设计- TabBar 导航栏</a></li>
-</ul>
+* [《从零开始搭建一个多端 IM》贰：页面导航模式设计- Navigator 导航](https://github.com/plusmancn/plusmancn.github.com/blob/master/2017/B3-rn-navigator-model-2.md)  
+* [《从零开始搭建一个多端 IM》壹：页面导航模式设计- TabBar 导航栏](https://github.com/plusmancn/plusmancn.github.com/blob/master/2017/B2-rn-navigator-model-1.md)
 
 ## TODO
 接下来的开发重点在
