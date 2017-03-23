@@ -12,7 +12,7 @@
 ## 效果图
 iOS 预览  |  Android 请直接扫码下载体验
 :-:|:-:
-![ios-demo.gif](./doc/asset/ios-demo-v1.4.0.gif) | ![安卓下载二维码](./doc/asset/Im.JS-v1.4.0.apk.png)
+![ios-demo.gif](./doc/asset/ios-demo-v1.4.1.gif) | ![安卓下载二维码](./doc/asset/Im.JS-v1.4.0.apk.png)
 
 ## 运行项目
 > react-native 在 debug 和 release 模式之间的性能差距是惊人的。
