@@ -10,12 +10,9 @@
 
 
 ## 效果图
-**iOS Gif**  
-
-
-**Android 请直接扫码下载体验**  
-
-![安卓下载二维码](./doc/asset/Im.JS-v1.1.0.apk.png)
+iOS 预览  |  Android 请直接扫码下载体验
+:-:|:-:
+![ios-demo.gif](./doc/asset/ios-demo.gif) | ![安卓下载二维码](./doc/asset/Im.JS-v1.4.0.apk.png)
 
 ## 运行项目
 > react-native 在 debug 和 release 模式之间的性能差距是惊人的。
@@ -56,12 +53,16 @@ react-native run-android
 </ul>
 
 ## TODO
+接下来的开发重点在
+
+* socket 集群间通讯和管理（大量精力会在这里，还是服务器擅长一点）
+* 聊天室体验优化
 
 **计划中**  
 
 - [x] 应用内离线消息，基于 `Reids` 实现。
-- [ ] **Important** 聊天室重构，使用 `FlatList` 和 `SectionList` 替换 `ListView`
-- [ ] **Important** 优化加载历史消息体验
+- [ ] **Important** [聊天室] 聊天室重构，使用 `FlatList` 和 `SectionList` 替换 `ListView`
+- [ ] **Important** [聊天室] 优化加载历史消息下拉加载更多体验，实现连续滑屏。 [Issue#1](https://github.com/im-js/im.js/issues/1)
 - [ ] `Ack` 消息触达、已读等状态回调。
 - [ ] 添加群聊支持
 - [ ] 公众号菜单以及对应后台 `Dashboard` 开发

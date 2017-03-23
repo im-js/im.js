@@ -97,16 +97,14 @@ class ChatRoom extends Component {
 
         // 这里是一个大坑，在测试环境的时候，由于运行速度较慢，scrollProperties.contentLength 总能
         // 获取到正确的值，生产环境需要加个延时，用来保证 `renderRow` 执行完毕
-        // 这里设置了 200ms 的延时
-        setTimeout( () => {
+        // 这里设置了 130ms 的延时
+        setTimeout(() => {
             let offsetY = scrollProperties.contentLength - scrollProperties.visibleLength;
-            if (offsetY > 0) {
-                this.chatListView.scrollTo({
-                    y: offsetY > 0 ? offsetY  : 0,
-                    animated: this._userHasBeenInputed
-                });
-            }
-        }, 200);
+            this.chatListView.scrollTo({
+                y: offsetY > 0 ? offsetY  : 0,
+                animated: this._userHasBeenInputed
+            });
+        }, this._userHasBeenInputed ? 0 : 130);
     }
 
     _onSubmitEditing = () => {
