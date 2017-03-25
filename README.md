@@ -42,7 +42,7 @@ react-native run-android
 ## 组件库
 > 开发本项目的时候，要求自己尽量手写基础组件，基础组件与业务无关，可通用
 
-组件库地址：[UiLibrary](https://github.com/plusmancn/im.js/blob/master/UiLibrary/README.md)
+组件库地址：[UiLibrary](https://github.com/im-js/im.js/tree/master/UiLibrary)
 
 通过更改 app.json 的 appMode 字段，进行组件调试模式（UiLibrary）和 Im 模式（ImClient）的切换
 
